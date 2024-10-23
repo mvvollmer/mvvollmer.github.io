@@ -89,7 +89,7 @@ section p {
     height: 300px; /* Set fixed height to ensure the image stays circular */
     border-radius: 50%; /* Circular image */
     object-fit: cover; /* This will crop the image while maintaining its aspect ratio */
-    object-position: 50% 30%; /* Adjusts which part of the image is centered */
+    object-position: 50% 60%; /* Adjusts which part of the image is centered */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
