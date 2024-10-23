@@ -85,8 +85,11 @@ section p {
 .profile-image {
     display: block;
     margin: 20px auto;
-    max-width: 300px;
+    width: 300px; /* Set fixed width */
+    height: 300px; /* Set fixed height to ensure the image stays circular */
     border-radius: 50%; /* Circular image */
+    object-fit: cover; /* This will crop the image while maintaining its aspect ratio */
+    object-position: 50% 30%; /* Adjusts which part of the image is centered */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
@@ -95,6 +98,7 @@ section p {
     display: block;
     margin: 20px auto;
     max-width: 100%; /* Ensures it doesn't exceed container width */
+    border-radius: 15px; /* Add rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
