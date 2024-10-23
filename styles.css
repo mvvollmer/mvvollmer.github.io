@@ -81,13 +81,23 @@ section p {
     color: rgb(var(--stone-600)); /* Stone 600 - Medium tone for text */
 }
 
+/* Profile Image */
 .profile-image {
     display: block;
     margin: 20px auto;
     max-width: 300px;
-    border-radius: 50%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for emphasis */
+    border-radius: 50%; /* Circular image */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
+
+/* Research Chart Image */
+.research-image {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%; /* Ensures it doesn't exceed container width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
 
 /* Footer */
 footer {
