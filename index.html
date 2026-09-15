@@ -1,51 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Miles V. Vollmer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miles V. Vollmer — Data & AI Platform Engineer</title>
+<meta name="description" content="Miles V. Vollmer — Performance & data-platform engineer. BI platform migrations, cloud infrastructure, and agentic automation for enterprise clients.">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>Welcome to My Website</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="projects.html">Projects</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <section>
-        <h2>About Me</h2>
-        <p>
-            Hi! I'm <strong>Miles V. Vollmer</strong>, a dedicated Computer Science major at Northeastern University,
-            focusing on <em>Artificial Intelligence</em>. My journey in the field of AI and machine learning has led me 
-            to work on several exciting projects, including the development of models to predict coral disease and optimize 
-            genome-wide association studies for COVID-19. These experiences have been equally challenging and rewarding, 
-            allowing me to contribute to scientific research and technology in meaningful ways.
-        </p>
-        <p>
-            At Northeastern, I’ve worked as a <strong>Research Assistant</strong> in the Evolutionary Genomics Lab, where
-            I built machine learning models that achieved over 92% classification accuracy, contributing to ecological
-            conservation efforts. My work has been published in <em>Environmental Microbiology</em>, focusing on using AI 
-            to identify coral pathogens. I also worked at Mass General Hospital, where I optimized genetic pipelines 
-            for COVID-19 data analysis, improving the efficiency of genome-wide association studies.
-        </p>
-        <p>
-            Beyond academics, I enjoy a variety of interests such as <strong>soccer</strong> (co-captain of Northeastern FC), 
-            <strong>surfing</strong>, <strong>scuba diving</strong>, and <strong>chess</strong>. These diverse activities keep
-            me grounded and inspired.
-        </p>
-        <p>
-            Explore my projects and feel free to reach out if you’d like to connect!
-        </p>
-        <img src="headshot.jpg" alt="Miles V. Vollmer" class="profile-image">
-    </section>
-    
-    <footer>
-        <p>Contact me at: <a href="mailto:milesvvollmer@gmail.com">milesvvollmer@gmail.com</a> | <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/">LinkedIn</a></p>
-    </footer>
+
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand">Miles Vollmer<span class="dot">.</span></a>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="Miles_Vollmer_CV.pdf">CV</a></li>
+        <li><a href="Miles_Vollmer_Resume.pdf" class="nav-cta">Résumé ↓</a></li>
+      </ul>
+    </nav>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="pulse"></span> Open to new opportunities</span>
+      <h1>Miles V. <span class="accent">Vollmer</span></h1>
+      <p class="role">Data & AI Platform Engineer — BI Migration · Cloud Infrastructure · Agentic Automation</p>
+      <p class="lede">
+        I build production data platforms and automation systems for enterprise clients — migrating
+        legacy BI estates into modern lakehouse architectures, right-sizing cloud infrastructure at
+        scale, and shipping agentic systems that replace manual engineering work. B.S. Computer
+        Science (AI) from Northeastern University.
+      </p>
+      <div class="hero-actions">
+        <a href="Miles_Vollmer_Resume.pdf" class="btn btn-primary">Download Résumé</a>
+        <a href="mailto:milesvvollmer@gmail.com" class="btn btn-ghost">Get in Touch</a>
+        <a href="https://github.com/mvvollmer" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="num">$2M+</div><div class="label">monthly infra savings delivered</div></div>
+        <div class="hero-stat"><div class="num">451→32</div><div class="label">dashboards migrated to Databricks</div></div>
+        <div class="hero-stat"><div class="num">97%+</div><div class="label">ML classification accuracy (published)</div></div>
+      </div>
+    </div>
+    <div class="hero-photo-wrap">
+      <img src="headshot.jpg" alt="Miles V. Vollmer" class="hero-photo">
+    </div>
+  </div>
+</header>
+
+<section class="block" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="section-kicker">// about</div>
+      <h2 style="margin-bottom:20px;">Performance engineer with a research background</h2>
+      <p>
+        I'm a <strong>Performance Engineering Consultant at Moviri</strong>, embedded with enterprise clients
+        in banking and telecommunications. My work sits at the intersection of <strong>cloud infrastructure,
+        BI platform engineering, and automation</strong> — the kind of work where reverse-engineering an
+        undocumented platform, translating SQL across dialects at scale, and building the tooling to do it
+        safely all happen in the same week.
+      </p>
+      <p>
+        Before Moviri, I was a <strong>research assistant in Northeastern's Evolutionary Genomics Lab</strong>,
+        where I built machine learning classifiers that identified coral disease pathogens with over 97%
+        accuracy — work that's now <a href="#publications">published in <em>Environmental Microbiology</em></a>.
+        I also spent time at <strong>Mass General Hospital</strong> building genome-wide association pipelines
+        for COVID-19 research.
+      </p>
+      <p>
+        Outside of engineering, I'm co-captain of a competitive soccer team in the Boston Metro Sunday Soccer
+        League — I bring the same systems thinking to the pitch as I do to a production migration.
+      </p>
+    </div>
+    <div>
+      <ul class="fact-list">
+        <li><span>Location</span><span>Boston, MA (Remote)</span></li>
+        <li><span>Education</span><span>B.S. CS, AI Concentration — Northeastern '24</span></li>
+        <li><span>Certifications</span><span>AWS Cloud Practitioner, BMC Certified Associate</span></li>
+        <li><span>Currently</span><span>Moviri — Performance Eng. Consultant</span></li>
+        <li><span>Email</span><span><a href="mailto:milesvvollmer@gmail.com">milesvvollmer@gmail.com</a></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="experience">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-kicker">// experience</div>
+      <h2>Where I've made an impact</h2>
+      <p>Consulting engineer embedded with enterprise clients, leading platform migration, BI modernization, and AI-driven automation from source-system analysis through production delivery.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="job">
+        <div class="job-head">
+          <div><span class="job-title">Performance Engineering Consultant</span> — <span class="job-org">Moviri</span></div>
+          <div class="job-date">Jan 2025 – Present</div>
+        </div>
+        <div class="job-sub">Leading cloud migration, BI platform modernization, and enterprise automation across banking and telecom clients.</div>
+
+        <div class="engagement">
+          <h4>Lloyds Banking Group — BMC Helix Continuous Optimization</h4>
+          <ul class="bullets">
+            <li>Led front-end and back-end development of a Business Units dashboard that <strong>won the Innovation Award</strong> at the London BMC Helix Roadshow.</li>
+            <li>Led capacity analysis that right-sized <strong>~10,000 overprovisioned servers</strong>, cutting infrastructure spend by <strong>$2M+ per month</strong>.</li>
+            <li>Extended a Dynatrace ETL collector (Java) to capture GCP host metadata across <strong>2,300+ hosts</strong>, designing a three-tier fallback resolution strategy that avoided an impractical relationship-graph query pattern.</li>
+            <li>Built a Java HTTP client integrating BHCO's REST API with the team's existing authentication infrastructure, and authored technical documentation for four reusable ETL extractor modules.</li>
+          </ul>
+        </div>
+
+        <div class="engagement">
+          <h4>Fastweb — Grafana → Databricks BI Migration</h4>
+          <ul class="bullets">
+            <li>Architected a <strong>~15-tool Python toolchain</strong> migrating a <strong>451-dashboard, 4,150-panel</strong> Grafana estate into Databricks AI/BI (Lakeview) — complexity scoring, SQL transpilation, spec-driven assembly, and automated validation.</li>
+            <li>Delivered <strong>32 production dashboards</strong>, reverse-engineering undocumented Lakeview internals (dynamic titles, conditional formatting, legend controls) with no public schema.</li>
+            <li>Root-caused data-correctness discrepancies against source warehouses and translated Redshift/PostgreSQL SQL to Databricks SQL at scale, resolving timezone and Lakehouse Federation incompatibilities.</li>
+            <li>Designed process guardrails for AI-assisted engineering, including a <strong>52-test automated regression suite</strong> protecting the build pipeline.</li>
+          </ul>
+        </div>
+
+        <div class="engagement">
+          <h4>Cross-Client Automation Delivery</h4>
+          <ul class="bullets">
+            <li>Designed an automated YAML-based CI/CD release pipeline for monthly releases across all offerings.</li>
+            <li>Built a full-stack HR automation system for meal voucher allocation and a multi-agent onboarding system integrated with NetSuite.</li>
+            <li>Designed and built <strong>Human-Oriented Automation Orchestration (HOAO)</strong>, an internal agentic automation framework (Google ADK + Gemini) with a human-in-the-loop pipeline that has agents write, sandbox-test, and self-validate their own automation tools; piloted internally as a deployed Cloud Run tool under Moviri's AI Labs program.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div><span class="job-title">Research Assistant</span> — <span class="job-org">Evolutionary Genomics Lab, Northeastern University</span></div>
+          <div class="job-date">May 2021 – Sep 2021, Sep 2022 – Aug 2024</div>
+        </div>
+        <ul class="bullets">
+          <li>Developed ML classifiers (MLP, SVM, Random Forest, Lasso) to predict coral disease states from 16S rDNA gene sequencing data, achieving <strong>over 97% classification accuracy</strong>.</li>
+          <li>Ran SHAP-based feature importance analysis to identify the bacterial taxa most predictive of disease state.</li>
+          <li>Co-authored a peer-reviewed publication in <em>Environmental Microbiology</em>.</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <div class="job-head">
+          <div><span class="job-title">Data Research Analyst</span> — <span class="job-org">Iafrate Lab, Mass General Hospital</span></div>
+          <div class="job-date">Jan 2022 – Aug 2022</div>
+        </div>
+        <ul class="bullets">
+          <li>Built an automated pipeline for genome-wide association (GWA) analysis of COVID-19 data, improving processing efficiency for large-scale genetic analysis.</li>
+          <li>Analyzed demographic variation in positivity rates, producing insights that informed intervention and policy discussions.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="skills">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-kicker">// skills</div>
+      <h2>Technical toolkit</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <h3>Cloud & Data Platforms</h3>
+        <div class="tag-row">
+          <span class="tag">Databricks</span><span class="tag">Unity Catalog</span><span class="tag">AWS EC2/S3</span>
+          <span class="tag">Grafana</span><span class="tag">Tableau</span><span class="tag">Power BI</span>
+          <span class="tag">dbt</span><span class="tag">BMC Helix</span><span class="tag">Dynatrace</span>
+          <span class="tag">Docker</span><span class="tag">Kubernetes</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Programming</h3>
+        <div class="tag-row">
+          <span class="tag">Python</span><span class="tag">Java</span><span class="tag">SQL</span>
+          <span class="tag">R</span><span class="tag">TypeScript</span><span class="tag">JavaScript</span>
+          <span class="tag">Bash</span><span class="tag">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Automation & Platform Eng.</h3>
+        <div class="tag-row">
+          <span class="tag">ETL Design</span><span class="tag">SQL Transpilation</span><span class="tag">REST APIs</span>
+          <span class="tag">CI/CD</span><span class="tag">Git</span><span class="tag">NetSuite</span>
+          <span class="tag">Multi-Agent Systems</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <h3>Machine Learning & AI</h3>
+        <div class="tag-row">
+          <span class="tag">PyTorch</span><span class="tag">TensorFlow</span><span class="tag">NLP</span>
+          <span class="tag">HuggingFace</span><span class="tag">Google ADK</span><span class="tag">RAG</span>
+          <span class="tag">Reinforcement Learning</span><span class="tag">SHAP</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-kicker">// projects</div>
+      <h2>Selected work</h2>
+      <p>A mix of production systems and independent research. Full writeups on the <a href="projects.html">projects page</a>.</p>
+    </div>
+    <div class="project-grid">
+      <div class="project-card">
+        <div class="pc-top"><h3>Coral Pathogen ML Pipeline</h3><span class="featured-badge">Published</span></div>
+        <p>ML classifiers identifying putative bacterial pathogens in endangered staghorn coral from 16S rDNA data — 97%+ accuracy, published in <em>Environmental Microbiology</em>.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Scikit-learn</span><span class="tag">SHAP</span></div>
+      </div>
+      <div class="project-card">
+        <div class="pc-top"><h3>Coral Population Genomics Pipeline</h3><span class="featured-badge">In Prep</span></div>
+        <p>Two-pass ANGSD/Snakemake pipeline across 290 whole genomes (2 species, 3 regions) — 2M+ SNPs, FST/SMC++ demographic analysis, and a candidate thermal-tolerance locus. Cloud-cost-optimized on AWS spot (~70% savings).</p>
+        <div class="tag-row"><span class="tag">AWS</span><span class="tag">Snakemake</span><span class="tag">ANGSD</span></div>
+      </div>
+      <div class="project-card">
+        <div class="pc-top"><h3>Agentic Automation Framework</h3><span class="featured-badge">Piloted @ Moviri</span></div>
+        <p>Multi-agent orchestration framework (Google ADK/Gemini) where agents write, sandbox-test, and self-validate their own tools under human approval — six build iterations, deployed internally as an AI Labs pilot.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Google ADK</span><span class="tag">Multi-Agent</span></div>
+      </div>
+      <div class="project-card">
+        <div class="pc-top"><h3>No-Limit Hold'em Poker Agent</h3></div>
+        <p>Multi-agent bot for 6-player poker using reinforcement learning and counterfactual regret minimization (CFR).</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">RL</span><span class="tag">CFR</span></div>
+      </div>
+      <div class="project-card">
+        <div class="pc-top"><h3>4-Player Chess AI</h3></div>
+        <p>Custom Minimax engine with reward engineering and alpha-beta pruning for multiplayer chess.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Game Theory</span></div>
+      </div>
+      <div class="project-card">
+        <div class="pc-top"><h3>Boston 311 Traffic NLP</h3></div>
+        <p>NLP pipeline over Boston 311 data to detect and classify traffic violations for urban planning use.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">NLP</span><span class="tag">Gensim</span></div>
+      </div>
+      <div class="project-card">
+        <div class="pc-top"><h3>Image Processing System</h3></div>
+        <p>Java application supporting advanced image filters and format conversions.</p>
+        <div class="tag-row"><span class="tag">Java</span></div>
+      </div>
+    </div>
+    <div class="projects-more">
+      <a href="projects.html" class="btn btn-ghost">See all projects →</a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="publications">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-kicker">// publications</div>
+      <h2>Research</h2>
+    </div>
+    <div class="pub-card">
+      <div class="pub-icon">📄</div>
+      <div>
+        <h3>Machine Learning Based Identification of Putative Coral Pathogens in Endangered Caribbean Staghorn Coral</h3>
+        <p>Selwyn, JD, Despard, BA, <strong>Vollmer, MV</strong>, Trytten EC, Vollmer, SV (2024). <span class="journal">Environmental Microbiology</span> 26(9): e16700.
+        &nbsp;<a href="https://enviromicro-journals.onlinelibrary.wiley.com/doi/epdf/10.1111/1462-2920.16700" target="_blank" rel="noopener">Read the paper →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block contact-block" id="contact" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="section-kicker" style="text-align:center;">// let's talk</div>
+    <h2>Looking for someone who ships?</h2>
+    <p>I'm currently open to new opportunities in data platform engineering, cloud infrastructure, and applied AI.</p>
+    <div class="contact-actions">
+      <a href="mailto:milesvvollmer@gmail.com" class="btn btn-primary">milesvvollmer@gmail.com</a>
+      <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/" class="btn btn-ghost" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/mvvollmer" class="btn btn-ghost" target="_blank" rel="noopener">GitHub</a>
+      <a href="Miles_Vollmer_Resume.pdf" class="btn btn-ghost">Résumé</a>
+      <a href="Miles_Vollmer_CV.pdf" class="btn btn-ghost">CV</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    © 2026 Miles V. Vollmer · Boston, MA · Built with plain HTML/CSS
+  </div>
+</footer>
+
 </body>
 </html>

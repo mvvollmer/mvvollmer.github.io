@@ -1,63 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Projects - Miles V. Vollmer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects — Miles V. Vollmer</title>
+<meta name="description" content="Selected projects by Miles V. Vollmer — data platform engineering, machine learning, and research work.">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>My Projects</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="projects.html">Projects</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <section>
-        <h2>Featured Projects</h2>
-        <p>
-            Throughout my academic and professional career, I’ve had the opportunity to contribute to impactful research and develop innovative projects. Below are some highlights of my work.
-        </p>
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="index.html" class="brand">Miles Vollmer<span class="dot">.</span></a>
+    <nav>
+      <ul>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#skills">Skills</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="Miles_Vollmer_CV.pdf">CV</a></li>
+        <li><a href="Miles_Vollmer_Resume.pdf" class="nav-cta">Résumé ↓</a></li>
+      </ul>
+    </nav>
+  </div>
+</nav>
 
-        <!-- Publication -->
-        <h3>1. Machine Learning-Based Identification of Coral Pathogens</h3>
-        <p>
-            Published in *Environmental Microbiology*, this project focused on the use of machine learning techniques to identify putative bacterial pathogens affecting endangered Caribbean staghorn coral. By building highly accurate classifiers using 16S rDNA bacterial gene sequencing data, we achieved over 92% classification accuracy and contributed to coral conservation efforts.
-        </p>
-        <img src="research_chart.png" alt="Research chart from publication" class="research-image">
-        <ul>
-            <li>Technologies used: Python, Scikit-Learn, TensorFlow, SHAP, Docker</li>
-            <li>Published in *Environmental Microbiology* (2024): <a href="https://enviromicro-journals.onlinelibrary.wiley.com/doi/epdf/10.1111/1462-2920.16700">Read Publication</a></li>
-        </ul>
+<header class="hero" style="padding:64px 0 48px;">
+  <div class="wrap">
+    <span class="eyebrow"><span class="pulse"></span> Projects</span>
+    <h1 style="font-size:2.4rem;">Selected <span class="accent">work</span></h1>
+    <p class="lede">Published research, independent engineering builds, and coursework projects — spanning
+      bioinformatics, reinforcement learning, and applied NLP.</p>
+  </div>
+</header>
 
-        <!-- Project 2 -->
-        <h3>2. Traffic Data Extractor</h3>
-        <p>
-            A Natural Language Processing (NLP) pipeline designed to extract, preprocess, and categorize traffic violation reports from the Boston 311 API. By automating key issue identification such as bike lane obstructions, this project enhances urban planning and infrastructure management.
-        </p>
-        <ul>
-            <li>Technologies used: Python, Gensim, Scikit-Learn, REST APIs</li>
-            <li>Built real-time data pipelines for traffic report processing.</li>
-            <li>Automated identification of critical urban issues.</li>
-        </ul>
+<section class="block">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-kicker">// featured / published</div>
+      <h2>Machine Learning-Based Identification of Coral Pathogens</h2>
+    </div>
+    <div class="project-grid" style="grid-template-columns: 1fr;">
+      <div class="project-card" style="flex-direction: row; gap: 28px; align-items: flex-start;">
+        <img src="research_chart.png" alt="Research chart from publication" style="width: 280px; border-radius: 10px; border: 1px solid var(--border); flex-shrink: 0;">
+        <div>
+          <p style="margin-bottom:14px;">
+            Published in <em>Environmental Microbiology</em> (2024), this project used 16S rDNA bacterial
+            gene sequencing data to train machine learning classifiers — Multilayer Perceptron, SVM, Random
+            Forest, and Lasso Regression among others — to predict coral disease states in endangered
+            Caribbean staghorn coral, achieving <strong>over 97% classification accuracy</strong>. SHAP-based
+            feature importance analysis identified the specific bacterial taxa most predictive of disease,
+            surfacing candidate pathogens for further study.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Python</span><span class="tag">Scikit-learn</span><span class="tag">TensorFlow</span>
+            <span class="tag">SHAP</span><span class="tag">Docker</span>
+          </div>
+          <p style="margin-top:16px;">
+            <a href="https://enviromicro-journals.onlinelibrary.wiley.com/doi/epdf/10.1111/1462-2920.16700" target="_blank" rel="noopener">Read the publication →</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <!-- Project 3 -->
-        <h3>3. Four-Person Chess AI</h3>
-        <p>
-            Developed a four-player chess AI using a custom Minimax algorithm with alpha-beta pruning, designed to compete against both random and experienced players. This project required the integration of game theory and advanced decision-making heuristics.
-        </p>
-        <ul>
-            <li>Technologies used: Python, Tkinter, Minimax, Alpha-Beta Pruning</li>
-            <li>Achieved 100% win rate against random AIs and 50% win rate against experienced players.</li>
-        </ul>
-    </section>
+<section class="block">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-kicker">// independent engineering</div>
+      <h2>Systems & pipelines</h2>
+    </div>
+    <div class="project-grid">
+      <div class="project-card">
+        <h3>Coral Population Genomics Pipeline</h3>
+        <p>Two-pass, Snakemake-orchestrated <strong>ANGSD</strong> population-genomics pipeline across
+        <strong>290 whole genomes</strong> (2 <em>Acropora</em> species, 3 Caribbean regions), portable across
+        workstation, SLURM HPC, and AWS EC2 (Singularity). Retained <strong>2,034,805 SNPs</strong>; FST analysis
+        quantified near-complete species isolation (0.43–0.46 inter-species vs. 0.05–0.11 intra-species), SMC++
+        reconstructed demographic history for both species, and LFMM genotype-environment association identified
+        a candidate thermal-tolerance locus (RNF213) corroborated by an independent introgression signal. Found
+        and fixed a recombination-mapping (pyrho) unit bug blocking downstream analysis. Engineered an AWS
+        spot-instance cost plan (~70% savings vs. on-demand) with automated retry, S3 sync, and auto-stop.
+        Feeds an in-preparation publication.</p>
+        <div class="tag-row"><span class="tag">AWS EC2/S3</span><span class="tag">Snakemake</span><span class="tag">ANGSD</span><span class="tag">SMC++</span><span class="tag">LFMM</span></div>
+      </div>
+      <div class="project-card">
+        <h3>Agentic Automation Framework (HOAO)</h3>
+        <p>Designed and built a hierarchical multi-agent orchestration framework (Google ADK + Gemini, FastAPI/SSE
+        UI) across six iterations. Its human-in-the-loop pipeline lets agents draft a Python tool for a task,
+        sandbox-test it with an auto-repair retry loop, and hold it for human approval before caching it for reuse
+        — turning one-off automations into a growing, validated tool library. Includes a telemetry-driven
+        "efficiency maximizer" that routes subtasks to cheaper or more capable models based on difficulty, and a
+        34-test suite running in ~1 second. Piloted internally at Moviri as a deployed Cloud Run tool under the
+        firm's AI Labs program.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Google ADK</span><span class="tag">FastAPI</span><span class="tag">Multi-Agent Systems</span><span class="tag">Cloud Run</span></div>
+      </div>
+      <div class="project-card">
+        <h3>No-Limit Texas Hold'em Poker Agents</h3>
+        <p>Implemented and benchmarked multiple competing poker-AI approaches for 6-player play: Counterfactual
+        Regret Minimization (CFR/MCCFR), a custom Q-learning agent, and a REBEL-style self-play agent with neural
+        policy/value networks and a replay buffer. Ran head-to-head tournaments (REBEL vs. Q-learning, vs. random,
+        and self-play) to evaluate exploitability, and wrote up the results and methodology.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">CFR/MCCFR</span><span class="tag">Self-Play RL</span></div>
+      </div>
+      <div class="project-card">
+        <h3>4-Player Chess AI</h3>
+        <p>Built a Minimax engine with move ordering, alpha-beta pruning, and global search caching for a
+        custom 2v2 team variant of chess on a 14×14 board, layered onto a forked open-source GUI.
+        <strong>Beat random-move AI 100% of the time</strong> and won roughly <strong>50% of games against
+        experienced human players.</strong></p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Tkinter</span><span class="tag">Minimax</span></div>
+      </div>
+      <div class="project-card">
+        <h3>Extracting Traffic Data with NLP</h3>
+        <p>NLP pipeline over the Boston 311 API to extract, preprocess, and classify traffic violation
+        reports — automating detection of issues like bike lane obstructions for urban planning use.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Gensim</span><span class="tag">REST APIs</span></div>
+      </div>
+      <div class="project-card">
+        <h3>Image Processing System</h3>
+        <p>Java application supporting a range of advanced image filters, transformations, and format
+        conversions, built around a clean, extensible command architecture.</p>
+        <div class="tag-row"><span class="tag">Java</span></div>
+      </div>
+      <div class="project-card">
+        <h3>GWA Analysis Pipeline (MGH)</h3>
+        <p>Automated pipeline for genome-wide association analysis of COVID-19 data at Mass General
+        Hospital, improving processing efficiency for large-scale genetic analysis and demographic
+        positivity-rate visualization.</p>
+        <div class="tag-row"><span class="tag">R</span><span class="tag">Bioinformatics</span><span class="tag">Data Viz</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer>
-        <p>Contact me at: <a href="mailto:milesvvollmer@gmail.com">milesvvollmer@gmail.com</a> | <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/">LinkedIn</a></p>
-    </footer>
+<footer>
+  <div class="wrap">
+    <p>Contact me at: <a href="mailto:milesvvollmer@gmail.com">milesvvollmer@gmail.com</a> · <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/mvvollmer" target="_blank" rel="noopener">GitHub</a></p>
+  </div>
+</footer>
+
 </body>
 </html>
