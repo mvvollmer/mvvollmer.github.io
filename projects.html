@@ -4,226 +4,160 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Projects, Miles V. Vollmer</title>
-<meta name="description" content="Selected projects by Miles V. Vollmer: data platform engineering, machine learning, and research work.">
+<meta name="description" content="Projects by Miles V. Vollmer: machine learning research, reinforcement learning, bioinformatics pipelines, and AI automation.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<nav class="site-nav">
-  <div class="wrap">
-    <a href="index.html" class="brand">Miles Vollmer<span class="dot">.</span></a>
-    <nav>
-      <ul>
-        <li><a href="index.html#about">About</a></li>
-        <li><a href="index.html#experience">Experience</a></li>
-        <li><a href="index.html#skills">Skills</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="Miles_Vollmer_CV.pdf" target="_blank" rel="noopener">CV</a></li>
-        <li><a href="Miles_Vollmer_Resume.pdf" class="nav-cta" target="_blank" rel="noopener">Résumé ↓</a></li>
-      </ul>
-    </nav>
-  </div>
-</nav>
+<button class="side-toggle" aria-label="Menu" onclick="document.body.classList.toggle('side-open')"><i class="fa-solid fa-bars"></i></button>
 
-<header class="hero" style="padding:64px 0 48px;">
-  <div class="wrap">
-    <span class="eyebrow"><span class="pulse"></span> Projects</span>
-    <h1 style="font-size:2.4rem;">Selected <span class="accent">work</span></h1>
-    <p class="lede">Published research, independent engineering builds, and coursework projects, spanning
-      bioinformatics, reinforcement learning, and applied NLP.</p>
+<aside class="sidebar">
+  <div class="profile">
+    <img src="headshot.jpg" alt="Miles V. Vollmer">
+    <h1><a href="index.html">Miles Vollmer</a></h1>
+    <p class="role">AI & Performance Engineer</p>
   </div>
-</header>
+  <div class="social">
+    <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+    <a href="https://github.com/mvvollmer" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+    <a href="mailto:milesvvollmer@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+  </div>
+  <ul class="side-nav">
+    <li><a href="index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+    <li><a href="resume.html"><i class="fa-solid fa-file-lines"></i>Résumé</a></li>
+    <li><a href="projects.html" class="active"><i class="fa-solid fa-diagram-project"></i>Projects</a></li>
+    <li><a href="Miles_Vollmer_Resume.pdf" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i>Résumé PDF</a></li>
+    <li><a href="Miles_Vollmer_CV.pdf" target="_blank" rel="noopener"><i class="fa-solid fa-book-open"></i>CV PDF</a></li>
+    <li><a href="index.html#contact"><i class="fa-solid fa-envelope"></i>Contact</a></li>
+  </ul>
+  <div class="side-foot">© 2026 Miles V. Vollmer</div>
+</aside>
 
-<section class="block" id="coral-ml">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-kicker">// featured, published</div>
-      <h2>Machine Learning Based Identification of Coral Pathogens</h2>
+<main class="main">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="kicker">Projects</div>
+      <h1>Selected work</h1>
+      <p>Published research, reinforcement learning, cloud-scale bioinformatics, and AI automation. Papers and code are linked where public.</p>
     </div>
-    <div class="project-grid" style="grid-template-columns: 1fr;">
-      <div class="project-card" style="flex-direction: row; gap: 28px; align-items: flex-start;">
-        <img src="research_chart.png" alt="Research chart from publication" style="width: 280px; border-radius: 10px; border: 1px solid var(--border); flex-shrink: 0;">
-        <div>
-          <p style="margin-bottom:14px;">
-            Published in <em>Environmental Microbiology</em> (2024), this project used 16S rDNA bacterial
-            gene sequencing data to train machine learning classifiers, including a Multilayer Perceptron,
-            SVM, Random Forest, and Lasso Regression, to predict coral disease states in endangered
-            Caribbean staghorn coral. The best models achieved <strong>over 97% classification accuracy</strong>.
-            SHAP-based feature importance analysis identified the specific bacterial taxa most predictive of
-            disease, surfacing candidate pathogens for further study.
-          </p>
-          <div class="tag-row">
-            <span class="tag">Python</span><span class="tag">Scikit-learn</span><span class="tag">TensorFlow</span>
-            <span class="tag">SHAP</span><span class="tag">Docker</span>
-          </div>
-          <div class="pc-links">
-            <a href="https://enviromicro-journals.onlinelibrary.wiley.com/doi/epdf/10.1111/1462-2920.16700" target="_blank" rel="noopener">Read the paper ↗</a>
-            <a href="https://github.com/VollmerLab/Genomic-Signatures-of-Disease-Resistance-in-Staghorn-Corals" target="_blank" rel="noopener">GitHub ↗</a>
+  </section>
+
+  <section class="section" id="coral-ml">
+    <div class="wrap">
+      <div class="section-title">
+        <span class="badge">Published</span>
+        <h2>Machine Learning Based Identification of Coral Pathogens</h2>
+      </div>
+      <div class="feature">
+        <img src="research_chart.png" alt="Figure from the coral pathogen publication">
+        <div class="prose">
+          <p>Published in <em>Environmental Microbiology</em> (2024). An ensemble machine learning and SHAP pipeline (Multilayer Perceptron, SVM, Random Forest, Lasso Regression) predicting disease states in endangered Caribbean staghorn coral from 16S rDNA bacterial sequencing data. The best models reached <strong>over 97% classification accuracy</strong>. SHAP feature-importance analysis identified the bacterial taxa most predictive of disease, surfacing candidate pathogens for further study.</p>
+          <span class="tag">Python</span><span class="tag">scikit-learn</span><span class="tag">TensorFlow</span><span class="tag">Ensemble ML</span><span class="tag">SHAP</span>
+          <div class="actions-row">
+            <a href="https://enviromicro-journals.onlinelibrary.wiley.com/doi/epdf/10.1111/1462-2920.16700" class="btn btn-primary" target="_blank" rel="noopener">Read the paper ↗</a>
+            <a href="https://github.com/VollmerLab/Genomic-Signatures-of-Disease-Resistance-in-Staghorn-Corals" class="btn btn-outline" target="_blank" rel="noopener">GitHub ↗</a>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="block" id="poker">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-kicker">// paper, coursework research</div>
-      <h2>No-Limit Texas Hold'em Poker Agents</h2>
-      <p>
-        A Multi-Method Approach to Training a Competitive No-Limit Texas Hold'em Poker Agent Using MCTS, CFR,
-        and ReBeL Architectures. Written with Dhananjai Senthil Kumar for Northeastern's Reinforcement
-        Learning course (CS 4180, Chris Amato).
-      </p>
-    </div>
-    <p>
-      Six-player No-Limit Hold'em is a large, imperfect-information game; opponents' cards are hidden, the
-      state space is continuous, and strategies that work in two-player poker generally do not scale to a
-      table of six. We modeled the problem as a Markov Decision Process and implemented and compared three
-      families of agents: Monte Carlo Tree Search (MCTS), Counterfactual Regret Minimization (CFR and MCCFR),
-      and a ReBeL-style agent that combines reinforcement learning with regret minimization over public
-      belief states, backed by neural policy, value, and bet-sizing networks.
-    </p>
-    <p>
-      Across ten trials of 1,000 rounds each, the ReBeL agent consistently outperformed a field of five
-      independent Q-learning agents, building a substantial and steadily widening lead in cumulative chip
-      count. CFR and MCCFR similarly outperformed Q-learning through regret-based strategy refinement, though
-      both struggled to fully capitalize against highly aggressive or adversarial opponents. Against a more
-      diverse agent pool including deterministic all-in and fold strategies, environment-level pot-distribution
-      issues introduced noise into the results, a limitation we documented directly in the paper alongside our
-      findings.
-    </p>
-    <div class="figure-grid">
-      <div class="figure-card">
-        <img src="assets/poker/rebel-vs-qagents.png" alt="Cumulative winnings of the ReBeL agent versus five Q-learning agents over 1,000 rounds">
-        <div class="figure-caption">ReBeL versus five Q-learning agents. Average cumulative winnings with an 80% confidence interval across 10 trials.</div>
+  <section class="section alt" id="poker">
+    <div class="wrap">
+      <div class="section-title">
+        <span class="badge">Paper</span>
+        <h2>No-Limit Texas Hold'em Poker Agents</h2>
+        <p>A Multi-Method Approach to Training a Competitive No-Limit Texas Hold'em Poker Agent Using MCTS, CFR, and ReBeL Architectures. Written with Dhananjai Senthil Kumar for Northeastern's Reinforcement Learning course (CS 4180).</p>
       </div>
-      <div class="figure-card">
-        <img src="assets/poker/cfr-qagents.png" alt="Cumulative winnings of the CFR agent versus Q-learning agents">
-        <div class="figure-caption">CFR versus Q-learning agents. Regret minimization consistently outperforms tabular Q-learning.</div>
+      <div class="prose">
+        <p>Six-player No-Limit Hold'em is a large imperfect-information game; opponents' cards are hidden, the state space is continuous, and strategies that work in two-player poker generally don't scale to a table of six. We modeled the problem as a Markov Decision Process and compared three families of agents: Monte Carlo Tree Search, Counterfactual Regret Minimization (CFR and MCCFR), and a ReBeL-style agent that combines reinforcement learning with regret minimization over public belief states, backed by neural policy, value, and bet-sizing networks.</p>
+        <p>Across ten trials of 1,000 rounds each, the ReBeL agent consistently outperformed a field of five independent Q-learning agents, with a steadily widening lead in cumulative chips. CFR and MCCFR also beat Q-learning, though both struggled against highly aggressive opponents. Against a more diverse pool, environment-level pot-distribution issues added noise to the results, a limitation we documented in the paper alongside the findings.</p>
+      </div>
+      <div class="figure-grid">
+        <figure class="figure">
+          <img src="assets/poker/rebel-vs-qagents.png" alt="ReBeL agent cumulative winnings versus five Q-learning agents">
+          <figcaption>ReBeL versus five Q-learning agents: average cumulative winnings with an 80% confidence interval across 10 trials.</figcaption>
+        </figure>
+        <figure class="figure">
+          <img src="assets/poker/cfr-qagents.png" alt="CFR agent cumulative winnings versus Q-learning agents">
+          <figcaption>CFR versus Q-learning agents: regret minimization consistently outperforms tabular Q-learning.</figcaption>
+        </figure>
+      </div>
+      <span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">CFR / MCCFR</span><span class="tag">ReBeL</span><span class="tag">Self-Play RL</span>
+      <div class="actions-row">
+        <a href="papers/vollmer-senthilkumar-poker-rl-2024.pdf" class="btn btn-primary" target="_blank" rel="noopener">Read the full paper ↗</a>
+        <a href="https://github.com/mvvollmer/RegretfulTexasHoldEm_feat_MonteCarlo" class="btn btn-outline" target="_blank" rel="noopener">GitHub ↗</a>
       </div>
     </div>
-    <div class="tag-row">
-      <span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">CFR / MCCFR</span>
-      <span class="tag">ReBeL</span><span class="tag">Self-Play RL</span>
-    </div>
-    <div class="paper-cta">
-      <a href="papers/vollmer-senthilkumar-poker-rl-2024.pdf" class="btn btn-primary" target="_blank" rel="noopener">Read the full paper ↗</a>
-      <a href="https://github.com/mvvollmer/RegretfulTexasHoldEm_feat_MonteCarlo" class="btn btn-ghost" target="_blank" rel="noopener">View on GitHub ↗</a>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="block" id="coral-genomics">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-kicker">// in preparation</div>
-      <h2>Coral Population Genomics Pipeline</h2>
-      <p>Vollmer Lab, Florida Atlantic University. A two-pass, Snakemake-orchestrated ANGSD population-genomics pipeline built to run identically on a local workstation, SLURM HPC, or AWS EC2.</p>
-    </div>
-    <p>
-      The pipeline processes <strong>290 whole-genome resequencing samples</strong> spanning two Caribbean
-      reef-building coral species, <em>Acropora palmata</em> and <em>A. cervicornis</em>, across three
-      regions (Florida, Panama, and Bonaire). After clone-filtering to 253 unrelated individuals, genotype
-      likelihood analysis in ANGSD retained <strong>2,034,805 SNPs</strong>. Downstream analyses include PCA
-      and admixture (PCAngsd), pairwise FST, SMC++ demographic reconstruction, GADMA-based demographic model
-      search, pyrho recombination mapping, and LFMM genotype-environment association for thermal tolerance.
-    </p>
-    <p>
-      Population structure was unambiguous: at K=2, admixture analysis assigned every sample to one species
-      or the other with zero admixed individuals, and pairwise FST quantified near-complete reproductive
-      isolation (0.43 to 0.46 between species versus 0.05 to 0.11 within species by geography). SMC++
-      reconstructed independent demographic histories for both species, including a shared bottleneck around
-      40,000 years ago consistent with Marine Isotope Stage 3. LFMM genotype-environment association
-      identified a single, highly reproducible thermal-tolerance locus at the RNF213 gene, corroborated
-      independently by an introgression (fd) signal roughly 25 times the genome-wide background, suggesting
-      adaptive introgression of heat tolerance between species. While diagnosing a recombination-mapping
-      pipeline stall, I traced the fault to a units mismatch in the pyrho windowing parameter and fixed it,
-      unblocking all downstream recombination and linked-selection analyses.
-    </p>
-    <p>
-      On the infrastructure side, I engineered an AWS spot-instance cost plan for the compute-heavy stages,
-      cutting per-hour compute cost by roughly 70% versus on-demand pricing, with automated retry, S3
-      syncing, and auto-stop to bound both cost and failure risk. This work feeds an in-preparation
-      publication.
-    </p>
-    <div class="figure-grid">
-      <div class="figure-card">
-        <img src="assets/coral-genomics/pca_population.png" alt="PCA of 290 Acropora samples colored by population, showing clean separation by species and geography">
-        <div class="figure-caption">PCAngsd ordination of all samples, colored by population. PC1 separates species; PC2 separates geography within A. cervicornis.</div>
+  <section class="section" id="coral-genomics">
+    <div class="wrap">
+      <div class="section-title">
+        <span class="badge">In Preparation</span>
+        <h2>Coral Population Genomics Pipeline</h2>
+        <p>A two-pass, Snakemake-orchestrated ANGSD pipeline that runs identically on a workstation, SLURM HPC, or AWS EC2.</p>
       </div>
-      <div class="figure-card">
-        <img src="assets/coral-genomics/smcpp_ne.png" alt="SMC++ effective population size history for A. palmata and A. cervicornis over the last 100,000 years">
-        <div class="figure-caption">SMC++ demographic reconstruction. Both species show a shared bottleneck near 40 kya (Marine Isotope Stage 3).</div>
+      <div class="prose">
+        <p>The pipeline processes <strong>290 whole-genome resequencing samples</strong> from two Caribbean reef-building coral species across Florida, Panama, and Bonaire. After filtering to 253 unrelated individuals, genotype-likelihood analysis retained <strong>2,034,805 SNPs</strong>. Downstream analyses include PCA and admixture, pairwise FST, SMC++ demographic reconstruction, recombination mapping, and genotype-environment association for heat tolerance.</p>
+        <p>Admixture analysis assigned every sample to one species with zero admixed individuals, and FST quantified near-complete reproductive isolation. SMC++ reconstructed both species' histories, including a shared bottleneck in the last glacial period. A single, reproducible heat-tolerance locus emerged, corroborated by an independent introgression signal. While diagnosing a pipeline stall I traced and fixed a units bug in the recombination-mapping step, unblocking all downstream analysis. On the infrastructure side, fault-tolerant AWS spot instances with automated retry, S3 sync, and auto-stop cut compute costs about 70%.</p>
       </div>
-      <div class="figure-card">
-        <img src="assets/coral-genomics/fst_heatmap.png" alt="Pairwise FST heatmap across lineages and regions">
-        <div class="figure-caption">Pairwise FST across lineages. Inter-species divergence is roughly five to ten times intra-species geographic divergence.</div>
+      <div class="figure-grid">
+        <figure class="figure">
+          <img src="assets/coral-genomics/pca_population.png" alt="PCA of coral samples colored by population">
+          <figcaption>PCA of all samples by population: PC1 separates species; PC2 separates geography.</figcaption>
+        </figure>
+        <figure class="figure">
+          <img src="assets/coral-genomics/smcpp_ne.png" alt="SMC++ effective population size history for both species">
+          <figcaption>SMC++ demographic reconstruction for both species.</figcaption>
+        </figure>
+        <figure class="figure">
+          <img src="assets/coral-genomics/fst_heatmap.png" alt="Pairwise FST heatmap across lineages">
+          <figcaption>Pairwise FST: divergence between species is several times divergence within them.</figcaption>
+        </figure>
       </div>
+      <span class="tag">AWS EC2 / S3</span><span class="tag">Snakemake</span><span class="tag">ANGSD</span><span class="tag">SMC++</span><span class="tag">SLURM</span>
     </div>
-    <div class="tag-row">
-      <span class="tag">AWS EC2 / S3</span><span class="tag">Snakemake</span><span class="tag">ANGSD</span>
-      <span class="tag">SMC++</span><span class="tag">LFMM</span><span class="tag">SLURM</span>
-    </div>
-  </div>
-</section>
+  </section>
 
-<section class="block">
-  <div class="wrap">
-    <div class="section-head">
-      <div class="section-kicker">// independent engineering</div>
-      <h2>Systems & other projects</h2>
-    </div>
-    <div class="project-grid">
-      <div class="project-card">
-        <h3>Agentic Automation Framework (HOAO)</h3>
-        <p>A hierarchical multi-agent orchestration framework (Google ADK + Gemini, FastAPI/SSE UI) built
-        across six iterations. Its human-in-the-loop pipeline lets agents draft a Python tool for a task,
-        sandbox-test it with an auto-repair retry loop, and hold it for human approval before caching it for
-        reuse, turning one-off automations into a growing, validated tool library. It includes a
-        telemetry-driven "efficiency maximizer" that routes subtasks to cheaper or more capable models based
-        on difficulty, and a 34-test suite that runs in about one second. Piloted internally at Moviri as a
-        deployed Cloud Run tool under the firm's AI Labs program.</p>
-        <div class="tag-row"><span class="tag">Python</span><span class="tag">Google ADK</span><span class="tag">FastAPI</span><span class="tag">Multi-Agent Systems</span><span class="tag">Cloud Run</span></div>
-      </div>
-      <div class="project-card">
-        <h3>4-Player Chess AI</h3>
-        <p>A Minimax engine with move ordering, alpha-beta pruning, and global search caching for a custom
-        2v2 team variant of chess on a 14x14 board, layered onto a forked open-source GUI. Beat random-move
-        AI 100% of the time and won roughly 50% of games against experienced human players.</p>
-        <div class="tag-row"><span class="tag">Python</span><span class="tag">Tkinter</span><span class="tag">Minimax</span></div>
-        <div class="pc-links"><a href="https://github.com/mvvollmer/4PlayerChess" target="_blank" rel="noopener">GitHub ↗</a></div>
-      </div>
-      <div class="project-card">
-        <h3>Extracting Traffic Data with NLP</h3>
-        <p>An NLP pipeline over the Boston 311 API to extract, preprocess, and classify traffic violation
-        reports, automating detection of issues like bike lane obstructions for urban planning use.</p>
-        <div class="tag-row"><span class="tag">Python</span><span class="tag">Gensim</span><span class="tag">REST APIs</span></div>
-      </div>
-      <div class="project-card">
-        <h3>Image Processing System</h3>
-        <p>A Java application supporting a range of advanced image filters, transformations, and format
-        conversions, built around a clean, extensible command architecture.</p>
-        <div class="tag-row"><span class="tag">Java</span></div>
-        <div class="pc-links"><a href="https://github.com/mvvollmer/ImageProcessing" target="_blank" rel="noopener">GitHub ↗</a></div>
-      </div>
-      <div class="project-card">
-        <h3>GWA Analysis Pipeline (MGH)</h3>
-        <p>An automated pipeline for genome-wide association analysis of COVID-19 data at Mass General
-        Hospital, improving processing efficiency for large-scale genetic analysis and demographic
-        positivity-rate visualization.</p>
-        <div class="tag-row"><span class="tag">R</span><span class="tag">Bioinformatics</span><span class="tag">Data Viz</span></div>
+  <section class="section alt" id="more">
+    <div class="wrap">
+      <div class="section-title"><h2>Systems & other projects</h2></div>
+      <div class="card-grid">
+        <div class="card">
+          <span class="badge" style="align-self:flex-start;">Piloted @ Moviri</span>
+          <h3>Agentic Automation Framework (HOAO)</h3>
+          <p>A hierarchical multi-agent framework (Google ADK, Gemini, FastAPI) built over six iterations. Agents draft a Python tool for a task, sandbox-test it with an auto-repair loop, and hold it for human approval before caching it for reuse. Telemetry-based routing sends each task to a cheaper or more capable model, and a 34-test suite runs in about a second. Deployed on Google Cloud Run under Moviri's AI Labs program.</p>
+          <div><span class="tag">Python</span><span class="tag">Google ADK</span><span class="tag">FastAPI</span><span class="tag">Cloud Run</span></div>
+        </div>
+        <div class="card">
+          <h3>4-Player Chess AI</h3>
+          <p>A Minimax engine with move ordering, alpha-beta pruning, and search caching for a 2v2 chess variant on a 14x14 board. Beat random-move AI 100% of the time and won about half its games against experienced human players.</p>
+          <div><span class="tag">Python</span><span class="tag">Minimax</span></div>
+          <div class="card-links"><a href="https://github.com/mvvollmer/4PlayerChess" target="_blank" rel="noopener">GitHub ↗</a></div>
+        </div>
+        <div class="card">
+          <h3>Extracting Traffic Data with NLP</h3>
+          <p>An NLP pipeline over the Boston 311 API that extracts and classifies traffic violation reports, automating detection of issues like bike lane obstructions for urban planning.</p>
+          <div><span class="tag">Python</span><span class="tag">Gensim</span><span class="tag">REST APIs</span></div>
+        </div>
+        <div class="card">
+          <h3>Image Processing System</h3>
+          <p>A Java MVC application with a GUI supporting image filters, transformations, and format conversions.</p>
+          <div><span class="tag">Java</span></div>
+          <div class="card-links"><a href="https://github.com/mvvollmer/ImageProcessing" target="_blank" rel="noopener">GitHub ↗</a></div>
+        </div>
+        <div class="card">
+          <h3>GWA Analysis Pipeline (MGH)</h3>
+          <p>Automated genome-wide association analysis of COVID-19 data at Mass General Hospital, with demographic positivity-rate visualizations.</p>
+          <div><span class="tag">R</span><span class="tag">Bioinformatics</span></div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="wrap">
-    <p>Contact me at: <a href="mailto:milesvvollmer@gmail.com">milesvvollmer@gmail.com</a> · <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/mvvollmer" target="_blank" rel="noopener">GitHub</a></p>
-  </div>
-</footer>
-
+</main>
 </body>
 </html>
