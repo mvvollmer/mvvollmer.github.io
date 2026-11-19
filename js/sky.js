@@ -66,7 +66,9 @@
   ].map(([name, region, lat, lon, tz]) => ({ name, region, lat, lon, tz }));
 
   const BIRTH = { date: "2002-04-23", time: "07:00", place: PLACES[0] };
-  const state = { date: BIRTH.date, time: BIRTH.time, place: BIRTH.place, utc0: 0, hours: 0 };
+  // utc0 is local midnight of the chosen date; hours is the time of day on the slider (0 to 24)
+  const state = { date: BIRTH.date, time: BIRTH.time, place: BIRTH.place, utc0: 0, hours: 7 };
+  const toHours = (hhmm) => { const [h, m] = hhmm.split(":").map(Number); return h + m / 60; };
 
   // local wall-clock time in a time zone -> UTC milliseconds
   function tzOffsetMs(utcMs, tz) {
@@ -494,20 +496,25 @@
   // ---------- date, time, and place ----------
   const longDate = (s) => new Date(s + "T12:00:00Z").toLocaleDateString("en-US", { timeZone: "UTC", month: "long", day: "numeric", year: "numeric" });
   function applyMoment() {
-    state.utc0 = zonedToUtc(state.date, state.time, state.place.tz);
+    state.utc0 = zonedToUtc(state.date, "00:00", state.place.tz);
     const isBirth = state.date === BIRTH.date && state.time === BIRTH.time && state.place === BIRTH.place;
     root.classList.toggle("is-custom", !isBirth);
     title.textContent = `${state.place.region} · ${longDate(state.date)}`;
-    setHours(0);
+    setHours(toHours(state.time));
   }
+  // the clock reading at the current slider position, in the place's own time zone (handles DST days)
   function fmtTime() {
-    const [hh, mm] = state.time.split(":").map(Number);
-    const mins = Math.round(hh * 60 + mm + state.hours * 60);
-    const h = Math.floor((((mins / 60) % 24) + 24) % 24), m = ((mins % 60) + 60) % 60;
-    return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, "0")} ${h >= 12 ? "PM" : "AM"}`;
+    return new Date(utcNow()).toLocaleTimeString("en-US", { timeZone: state.place.tz, hour: "numeric", minute: "2-digit" });
   }
-  function setHours(v) { state.hours = v; timeInput.value = v; timeLabel.textContent = fmtTime(); if (reduceMotion) redraw(); }
-  timeInput.addEventListener("input", () => setHours(parseFloat(timeInput.value)));
+  function setHours(v) {
+    state.hours = Math.max(0, Math.min(24, v));
+    const mins = Math.min(23 * 60 + 59, Math.round(state.hours * 60));
+    state.time = `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`;
+    timeInput.value = Math.round(state.hours * 60); timeLabel.textContent = fmtTime();
+    if (!panel.hidden) clockField.value = state.time;
+    if (reduceMotion) redraw();
+  }
+  timeInput.addEventListener("input", () => setHours(parseFloat(timeInput.value) / 60));   // slider counts minutes
 
   placeField.innerHTML = PLACES.map((p, i) => `<option value="${i}">${p.name}${p.name.includes(",") ? "" : ", " + p.region}</option>`).join("") + `<option value="here">My location</option>`;
   function syncFields() {
@@ -552,7 +559,7 @@
     let last = performance.now();
     const step = (now) => {
       let v = state.hours + ((now - last) / 1000) * 0.6; last = now;
-      if (v > 12) v = -12;
+      if (v > 24) v = 0;
       setHours(v); anim = requestAnimationFrame(step);
     };
     anim = requestAnimationFrame(step);

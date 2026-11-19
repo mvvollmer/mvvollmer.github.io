@@ -307,7 +307,7 @@ img { max-width: 100%; }
 }
 .sky-controls button:hover, .sky-controls button:focus-visible { background: var(--accent); color: var(--white); outline: none; }
 .sky-time { display: flex; align-items: center; gap: 10px; }
-.sky-time input { width: clamp(90px, 14vw, 170px); accent-color: var(--accent); cursor: pointer; }
+.sky-time input { width: clamp(120px, 19vw, 230px); accent-color: var(--accent); cursor: pointer; }
 .sky-time output { font-family: var(--font-nav); font-size: .82rem; color: rgba(255,255,255,.9); min-width: 64px; }
 .sky-tip, .sky-hint {
   position: absolute; pointer-events: none; font-family: var(--font-nav); font-size: .78rem;
