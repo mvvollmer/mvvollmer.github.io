@@ -29,14 +29,25 @@
   <div class="hero-img sky" id="sky">
     <canvas role="img" aria-label="Interactive star map of the sky over Massachusetts on April 23, 2002, with the constellation Taurus highlighted. Hover the constellations to play music; drag to explore the zodiac and other major constellations."></canvas>
     <div class="sky-caption">
-      <span class="sky-title"><i class="fa-solid fa-star"></i> Massachusetts · April 23, 2002</span>
+      <span class="sky-title"><i class="fa-solid fa-star"></i> <span class="sky-title-text">Massachusetts · April 23, 2002</span></span>
       <span class="sky-sub">Hover the stars to listen · drag to explore</span>
     </div>
     <div class="sky-controls">
       <button class="sky-play" type="button" aria-label="Play or pause the sky's motion"><i class="fa-solid fa-play"></i></button>
       <label class="sky-time"><span class="visually-hidden">Time of day</span><input type="range" min="-6" max="6" step="0.05" value="0"><output>7:00 AM</output></label>
-      <button class="sky-reset" type="button" aria-label="Reset to 7:00 AM"><i class="fa-solid fa-rotate-left"></i></button>
+      <button class="sky-when" type="button" aria-label="Choose a date, time, and place" aria-expanded="false" title="Date, time, and place"><i class="fa-solid fa-calendar-days"></i></button>
+      <button class="sky-reset" type="button" aria-label="Reset the sky" title="Reset"><i class="fa-solid fa-rotate-left"></i></button>
           </div>
+    <div class="sky-panel" hidden>
+      <div class="sky-panel-head">See the sky for any moment</div>
+      <label>Date<input class="sky-date" type="date" min="1900-01-01" max="2100-12-31"></label>
+      <label>Local time<input class="sky-clock" type="time"></label>
+      <label>Place<select class="sky-place"></select></label>
+      <div class="sky-panel-actions">
+        <button class="sky-now" type="button">Right now</button>
+        <button class="sky-birth" type="button">Back to the start</button>
+      </div>
+    </div>
     <div class="sky-tip" hidden></div>
     <div class="sky-hint" hidden></div>
   </div>
@@ -45,9 +56,10 @@
     <h1>Miles V. Vollmer</h1>
     <p class="role">AI & Performance Engineer</p>
     <p class="lede">
-      I build, integrate, and optimize enterprise systems, with results on the record: $2M+ per month in
-      infrastructure savings, an award-winning dashboard, and peer-reviewed machine learning research.
-      I find and deliver improvements at every scale, from a single query to an enterprise platform.
+      Building, integrating, and optimizing enterprise systems, with real value delivered: $2M+ per month
+      in infrastructure savings, award-winning business insight dashboards, and a published paper applying
+      machine learning to coral research. I find and deliver improvements at every scale, on any system,
+      in any language.
     </p>
     <div class="actions">
       <a href="resume.html" class="btn btn-primary">View Résumé</a>

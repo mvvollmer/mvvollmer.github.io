@@ -370,3 +370,26 @@ img { max-width: 100%; }
 @media (max-width: 760px) { .music-widget.below-nav { top: 80px; right: 12px; } }
 @media (prefers-reduced-motion: reduce) { .music-widget.needs-click .mw-toggle { animation: none; } }
 @media (max-width: 760px) { .sky-caption { right: 112px; } }
+
+/* Sky: date, time, and place panel */
+.sky-panel {
+  position: absolute; left: 20px; bottom: 74px; width: min(300px, calc(100% - 40px));
+  background: rgba(4,11,20,.92); border: 1px solid rgba(20,157,221,.45); border-radius: 12px; padding: 14px;
+  display: grid; gap: 10px; color: var(--white); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.4);
+}
+.sky-panel-head { font-family: var(--font-nav); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.sky-panel label { display: grid; gap: 4px; font-family: var(--font-nav); font-size: .75rem; color: var(--nav); }
+.sky-panel input, .sky-panel select {
+  font: inherit; font-size: .9rem; color: var(--white); background: rgba(255,255,255,.06);
+  border: 1px solid rgba(168,169,180,.3); border-radius: 8px; padding: 7px 9px; color-scheme: dark;
+}
+.sky-panel input:focus, .sky-panel select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sky-panel select option { background: var(--dark); }
+.sky-panel-actions { display: flex; gap: 8px; }
+.sky-panel-actions button {
+  flex: 1; cursor: pointer; font-family: var(--font-nav); font-size: .8rem; padding: 8px 10px; border-radius: 50px;
+  border: 1px solid var(--accent); background: transparent; color: var(--white); transition: background .2s;
+}
+.sky-panel-actions button:hover, .sky-panel-actions button:focus-visible { background: var(--accent); outline: none; }
+.sky-panel[hidden], .mw-list[hidden] { display: none; }
