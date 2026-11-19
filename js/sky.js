@@ -19,7 +19,7 @@
 
   const D2R = Math.PI / 180, R2D = 180 / Math.PI;
   const ACCENT = "20,157,221";
-  const DATA = "data/sky/", VERSION = "202611191620";   // VERSION is updated by bump-version.sh
+  const DATA = "data/sky/", VERSION = "202611191639";   // VERSION is updated by bump-version.sh
 
   // ---------- places (real coordinates and IANA time zones; DST handled by the browser) ----------
   const PLACES = [

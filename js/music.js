@@ -48,11 +48,16 @@
     });
   }
 
+  // iOS Safari ignores audio.volume (it stays at 1), so fades never finish there.
+  // Detect that once and skip straight to the end state; also cap every fade at ~1.2s.
+  const canFade = (() => { try { const a = new Audio(); a.volume = 0.5; return Math.abs(a.volume - 0.5) < 0.01; } catch (e) { return false; } })();
   function fadeTo(target, done) {
     clearInterval(fadeTimer);
+    if (!canFade) { done && done(); return; }
+    let ticks = 0;
     fadeTimer = setInterval(() => {
       const step = target > audio.volume ? 0.04 : -0.04, v = audio.volume + step;
-      if ((step > 0 && v >= target) || (step < 0 && v <= target)) {
+      if (++ticks > 30 || (step > 0 && v >= target) || (step < 0 && v <= target)) {
         audio.volume = Math.max(0, Math.min(1, target)); clearInterval(fadeTimer); done && done();
       } else audio.volume = Math.max(0, Math.min(1, v));
     }, 40);
