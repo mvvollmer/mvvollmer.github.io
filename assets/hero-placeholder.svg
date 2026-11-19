@@ -1,34 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" preserveAspectRatio="xMidYMid slice">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#040b14"/>
-      <stop offset="1" stop-color="#0b2236"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0.7" cy="0.3" r="0.6">
-      <stop offset="0" stop-color="#149ddd" stop-opacity="0.35"/>
-      <stop offset="1" stop-color="#149ddd" stop-opacity="0"/>
-    </radialGradient>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0H0V40" fill="none" stroke="#149ddd" stroke-opacity="0.08" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="800" height="1000" fill="url(#bg)"/>
-  <rect width="800" height="1000" fill="url(#grid)"/>
-  <rect width="800" height="1000" fill="url(#glow)"/>
-  <g stroke="#149ddd" stroke-opacity="0.45" stroke-width="1.5" fill="none">
-    <path d="M120 760 L260 600 L410 660 L560 420 L690 300"/>
-    <path d="M260 600 L330 430 L560 420"/>
-    <path d="M410 660 L520 820 L690 740"/>
-    <path d="M330 430 L200 300 L360 180 L560 420"/>
-    <path d="M690 300 L620 140"/>
-  </g>
-  <g fill="#149ddd">
-    <circle cx="120" cy="760" r="6"/><circle cx="260" cy="600" r="8"/><circle cx="410" cy="660" r="6"/>
-    <circle cx="560" cy="420" r="11"/><circle cx="690" cy="300" r="7"/><circle cx="330" cy="430" r="6"/>
-    <circle cx="520" cy="820" r="5"/><circle cx="690" cy="740" r="6"/><circle cx="200" cy="300" r="5"/>
-    <circle cx="360" cy="180" r="7"/><circle cx="620" cy="140" r="5"/>
-  </g>
-  <g fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="2">
-    <circle cx="560" cy="420" r="26"/><circle cx="260" cy="600" r="20"/>
-  </g>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#040b14"/><stop offset="1" stop-color="#0b2236"/></linearGradient>
+<radialGradient id="glow" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="#149ddd" stop-opacity="0.22"/><stop offset="1" stop-color="#149ddd" stop-opacity="0"/></radialGradient>
+<filter id="blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3"/></filter></defs>
+<rect width="800" height="1000" fill="url(#bg)"/><rect width="800" height="1000" fill="url(#glow)"/>
+<g fill="#ffffff" fill-opacity="0.45"><circle cx="769.7" cy="63.8" r="3.5"/><circle cx="562.0" cy="236.2" r="2.6"/><circle cx="545.2" cy="81.8" r="2.5"/><circle cx="606.4" cy="228.5" r="1.5"/><circle cx="278.1" cy="211.8" r="2.8"/><circle cx="255.6" cy="9.4" r="2.4"/><circle cx="15.2" cy="701.3" r="5.4"/><circle cx="198.8" cy="997.8" r="5.8"/><circle cx="150.9" cy="721.4" r="4.0"/><circle cx="119.9" cy="847.7" r="3.3"/><circle cx="100.9" cy="864.8" r="4.0"/><circle cx="80.3" cy="878.9" r="3.9"/><circle cx="105.7" cy="653.3" r="1.9"/><circle cx="796.3" cy="764.3" r="3.0"/></g>
+<g stroke="#149ddd" stroke-width="5" stroke-opacity="0.35" filter="url(#blur)"><line x1="94.4" y1="440.3" x2="373.2" y2="528.3"/><line x1="373.2" y1="528.3" x2="406.1" y2="540.5"/><line x1="406.1" y1="540.5" x2="446.2" y2="545.1"/><line x1="446.2" y1="545.1" x2="431.9" y2="508.7"/><line x1="431.9" y1="508.7" x2="406.3" y2="477.6"/><line x1="406.3" y1="477.6" x2="344.6" y2="405.8"/><line x1="344.6" y1="405.8" x2="145.7" y2="298.5"/><line x1="446.2" y1="545.1" x2="532.6" y2="604.7"/><line x1="532.6" y1="604.7" x2="694.5" y2="670.5"/><line x1="694.5" y1="670.5" x2="684.0" y2="657.1"/><line x1="532.6" y1="604.7" x2="521.3" y2="728.2"/></g>
+<g stroke="#149ddd" stroke-width="2" stroke-opacity="0.9" stroke-linecap="round"><line x1="94.4" y1="440.3" x2="373.2" y2="528.3"/><line x1="373.2" y1="528.3" x2="406.1" y2="540.5"/><line x1="406.1" y1="540.5" x2="446.2" y2="545.1"/><line x1="446.2" y1="545.1" x2="431.9" y2="508.7"/><line x1="431.9" y1="508.7" x2="406.3" y2="477.6"/><line x1="406.3" y1="477.6" x2="344.6" y2="405.8"/><line x1="344.6" y1="405.8" x2="145.7" y2="298.5"/><line x1="446.2" y1="545.1" x2="532.6" y2="604.7"/><line x1="532.6" y1="604.7" x2="694.5" y2="670.5"/><line x1="694.5" y1="670.5" x2="684.0" y2="657.1"/><line x1="532.6" y1="604.7" x2="521.3" y2="728.2"/></g>
+<g fill="#d7eeff"><circle cx="373.2" cy="528.3" r="7.2"/><circle cx="145.7" cy="298.5" r="6.0"/><circle cx="94.4" cy="440.3" r="4.0"/><circle cx="592.1" cy="384.0" r="4.2"/><circle cx="584.5" cy="385.0" r="3.1"/><circle cx="603.9" cy="383.8" r="2.9"/><circle cx="599.6" cy="379.0" r="2.7"/><circle cx="597.3" cy="387.0" r="2.2"/><circle cx="602.3" cy="377.1" r="2.1"/><circle cx="584.4" cy="383.4" r="2.0"/><circle cx="532.6" cy="604.7" r="3.4"/><circle cx="446.2" cy="545.1" r="3.0"/><circle cx="431.9" cy="508.7" r="2.9"/><circle cx="406.3" cy="477.6" r="3.2"/><circle cx="406.1" cy="540.5" r="3.4"/><circle cx="694.5" cy="670.5" r="3.1"/><circle cx="684.0" cy="657.1" r="2.9"/><circle cx="344.6" cy="405.8" r="2.1"/><circle cx="521.3" cy="728.2" r="2.7"/></g>
+<text x="353" y="598" fill="#149ddd" font-family="Poppins, Arial, sans-serif" font-weight="700" font-size="28" letter-spacing="6">TAURUS</text>
 </svg>

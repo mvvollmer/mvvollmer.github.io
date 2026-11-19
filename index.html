@@ -15,7 +15,8 @@
     <a href="index.html" class="brand">Miles Vollmer<span>.</span></a>
     <button class="nav-toggle" aria-label="Menu" onclick="document.body.classList.toggle('nav-open')"><i class="fa-solid fa-bars"></i></button>
     <ul>
-      <li><a href="#what-i-do">What I Do</a></li>
+      <li><a href="#for-you">What I Can Do</a></li>
+      <li><a href="case-studies.html">Case Studies</a></li>
       <li><a href="resume.html">Résumé</a></li>
       <li><a href="projects.html">Projects</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -25,7 +26,20 @@
 </header>
 
 <section class="split-hero">
-  <div class="hero-img" role="img" aria-label="Placeholder graphic"></div>
+  <div class="hero-img sky" id="sky">
+    <canvas role="img" aria-label="Interactive star map of the sky over Massachusetts on April 23, 2002, with the constellation Taurus highlighted. Hover the constellations to play music; drag to explore the zodiac and other major constellations."></canvas>
+    <div class="sky-caption">
+      <span class="sky-title"><i class="fa-solid fa-star"></i> Massachusetts · April 23, 2002</span>
+      <span class="sky-sub">Hover the stars to listen · drag to explore</span>
+    </div>
+    <div class="sky-controls">
+      <button class="sky-play" type="button" aria-label="Play or pause the sky's motion"><i class="fa-solid fa-play"></i></button>
+      <label class="sky-time"><span class="visually-hidden">Time of day</span><input type="range" min="-6" max="6" step="0.05" value="0"><output>7:00 AM</output></label>
+      <button class="sky-reset" type="button" aria-label="Reset to 7:00 AM"><i class="fa-solid fa-rotate-left"></i></button>
+          </div>
+    <div class="sky-tip" hidden></div>
+    <div class="sky-hint" hidden></div>
+  </div>
   <div class="hero-panel">
     <div class="kicker">Hello, I'm</div>
     <h1>Miles V. Vollmer</h1>
@@ -67,7 +81,7 @@
     <h2>By the numbers</h2>
     <ul class="stat-list">
       <li><span class="num">$2M+</span><span class="lbl">per month in infrastructure savings</span></li>
-      <li><span class="num">400+</span><span class="lbl">dashboards migrated with AI-assisted tooling</span></li>
+      <li><span class="num">450</span><span class="lbl">dashboards migrated to production, single-handed</span></li>
       <li><span class="num">7,000+</span><span class="lbl">visualizations re-platformed by one engineer</span></li>
       <li><span class="num">97%+</span><span class="lbl">ML classification accuracy, published</span></li>
     </ul>
@@ -84,26 +98,30 @@
   </div>
 </section>
 
-<section class="metro" id="what-i-do">
+<section class="metro" id="for-you">
+  <div class="tile t-12 t-white" style="padding-bottom:8px;">
+    <h2>What I can do for you</h2>
+    <p class="sub">Where I add value from the first week</p>
+  </div>
   <div class="tile t-3 t-accent">
-    <i class="fa-solid fa-layer-group icon"></i>
-    <h3>Build</h3>
-    <p>Full-stack systems, front end to back end: an award-winning drill-down dashboard, internal web apps, ETL integrations, and multi-agent platforms, in whatever language the system requires.</p>
+    <i class="fa-solid fa-gauge-high icon"></i>
+    <h3>Cut your infrastructure costs</h3>
+    <p>I measure first, then remove waste. At a major UK bank, my capacity analysis across ~10,000 servers drove rightsizing worth $2M+ per month.</p>
   </div>
   <div class="tile t-3 t-white">
-    <i class="fa-solid fa-plug icon"></i>
-    <h3>Integrate</h3>
-    <p>I work inside existing enterprise environments: monitoring platforms, cloud APIs, data warehouses, ServiceNow, and NetSuite. When internals are undocumented, I reverse-engineer them into reusable tools.</p>
+    <i class="fa-solid fa-right-left icon" style="color:var(--accent);"></i>
+    <h3>Migrate platforms without losing what works</h3>
+    <p>I re-platformed 450 dashboards and 7,000+ visualizations to Databricks single-handed, on a fixed timeline, with every one verified, approved, and live in production.</p>
   </div>
   <div class="tile t-3 t-dark">
-    <i class="fa-solid fa-gauge-high icon" style="color:var(--accent);"></i>
-    <h3>Optimize</h3>
-    <p>I measure first, then cut waste: $2M+ per month saved by rightsizing ~10,000 servers, cost models for 100 TB data moves, and integrations that scale without per-host API calls.</p>
+    <i class="fa-solid fa-layer-group icon" style="color:var(--accent);"></i>
+    <h3>Build the tools your team is missing</h3>
+    <p>Full-stack, in whatever language your systems use: an award-winning drill-down dashboard, internal web apps, ETL integrations, and reusable company IP.</p>
   </div>
   <div class="tile t-3 t-light">
     <i class="fa-solid fa-robot icon"></i>
-    <h3>Automate with AI</h3>
-    <p>Published ensemble ML research, reinforcement-learning agents, and a multi-agent framework in which agents build their own tools. AI-assisted engineering extends one engineer's output to enterprise scale.</p>
+    <h3>Put AI to work, safely</h3>
+    <p>AI systems that do real work under human control: agents that build and test their own tools, and AI-assisted engineering that multiplies what one engineer can deliver.</p>
   </div>
 </section>
 
@@ -118,13 +136,13 @@
     </div>
     <div class="media">
       <i class="fa-solid fa-tower-cell"></i>
-      <div><h3>Major Italian Telecommunications Provider</h3><p>Sole engineer re-platforming 450 dashboards (7,000+ visualizations) into Databricks on a fixed timeline, using an AI-assisted toolchain I architected.</p></div>
+      <div><h3>Major Italian Telecommunications Provider</h3><p>As sole engineer, re-platformed all 450 dashboards (7,000+ visualizations) into Databricks and production on a fixed timeline, using an AI-assisted toolchain I architected.</p></div>
     </div>
     <div class="media">
       <i class="fa-solid fa-flask"></i>
       <div><h3>Northeastern University and Mass General Hospital</h3><p>Machine learning and genomics pipelines, including a peer-reviewed publication.</p></div>
     </div>
-    <a href="resume.html">See the full experience →</a>
+    <a href="resume.html">See the full experience →</a> &nbsp; <a href="case-studies.html">Read the case studies →</a>
   </div>
 </section>
 
@@ -189,5 +207,8 @@
   © 2026 Miles V. Vollmer · Florida (Remote) · <a href="https://github.com/mvvollmer" target="_blank" rel="noopener">GitHub</a>
 </footer>
 
+<script src="js/music.js"></script>
+<script src="js/sky-data.js"></script>
+<script src="js/sky.js"></script>
 </body>
 </html>

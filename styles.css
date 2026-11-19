@@ -280,3 +280,93 @@ img { max-width: 100%; }
   .facts, .skill-groups { grid-template-columns: 1fr; }
   .feature { grid-template-columns: 1fr; }
 }
+
+/* =========================================================
+   INTERACTIVE SKY (home hero)
+   ========================================================= */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sky { position: relative; overflow: hidden; background: var(--dark); user-select: none; -webkit-user-select: none; touch-action: none; }
+.sky canvas { position: absolute; inset: 0; display: block; cursor: grab; }
+.sky canvas:active { cursor: grabbing; }
+.sky-caption {
+  position: absolute; left: 24px; top: 22px; right: 24px; pointer-events: none;
+  display: flex; flex-direction: column; gap: 4px; color: rgba(255,255,255,.88);
+}
+.sky-title { font-family: var(--font-nav); font-weight: 500; font-size: .92rem; letter-spacing: .02em; }
+.sky-title i { color: var(--accent); margin-right: 6px; }
+.sky-sub { font-size: .85rem; color: rgba(168,169,180,.95); max-width: 34em; transition: color .3s; }
+.sky.is-taurus .sky-sub { color: rgba(20,157,221,1); }
+.sky-controls {
+  position: absolute; left: 20px; bottom: 20px; display: flex; align-items: center; gap: 8px;
+  background: rgba(4,11,20,.72); border: 1px solid rgba(168,169,180,.22); border-radius: 50px;
+  padding: 6px 10px; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.sky-controls button {
+  width: 32px; height: 32px; border-radius: 50%; border: 0; cursor: pointer;
+  background: transparent; color: rgba(255,255,255,.85); font-size: .9rem; transition: background .2s, color .2s;
+}
+.sky-controls button:hover, .sky-controls button:focus-visible { background: var(--accent); color: var(--white); outline: none; }
+.sky-time { display: flex; align-items: center; gap: 10px; }
+.sky-time input { width: clamp(90px, 14vw, 170px); accent-color: var(--accent); cursor: pointer; }
+.sky-time output { font-family: var(--font-nav); font-size: .82rem; color: rgba(255,255,255,.9); min-width: 64px; }
+.sky-tip, .sky-hint {
+  position: absolute; pointer-events: none; font-family: var(--font-nav); font-size: .78rem;
+  background: rgba(4,11,20,.88); color: var(--white); border: 1px solid rgba(20,157,221,.5);
+  padding: 5px 10px; border-radius: 6px; white-space: nowrap;
+}
+.sky-hint { left: 50%; top: 50%; transform: translate(-50%, -50%); }
+@media (max-width: 991px) {
+  .split-hero .sky { min-height: 420px; }
+  .sky-sub { font-size: .78rem; }
+}
+
+/* Case studies */
+.cs-prose { max-width: 860px; }
+.cs-prose h3 { font-size: 1.15rem; margin: 22px 0 8px; }
+.cs-prose ul { padding-left: 20px; }
+.cs-prose li { margin-bottom: 10px; }
+.cs-figure { margin: 28px auto; max-width: 900px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+.cs-figure-narrow { max-width: 760px; }
+.cs-figure img { display: block; margin: 0 auto; }
+.section .stats { margin: 8px 0 18px; }
+
+.sky.is-hover .sky-sub { color: rgba(20,157,221,1); }
+
+/* =========================================================
+   SITE MUSIC WIDGET (every page)
+   ========================================================= */
+.music-widget {
+  position: fixed; top: 18px; right: 18px; z-index: 80;
+  display: flex; align-items: center; gap: 2px;
+  background: rgba(4,11,20,.88); border: 1px solid rgba(168,169,180,.25); border-radius: 50px; padding: 4px;
+  box-shadow: 0 6px 20px rgba(4,11,20,.18); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.music-widget.below-nav { top: 82px; }
+.music-widget > button {
+  width: 36px; height: 36px; border-radius: 50%; border: 0; cursor: pointer;
+  background: transparent; color: rgba(255,255,255,.85); font-size: .92rem; transition: background .2s, color .2s;
+}
+.music-widget > button:hover, .music-widget > button:focus-visible { background: var(--accent); color: var(--white); outline: none; }
+.music-widget.playing .mw-toggle { color: var(--accent); }
+.music-widget.playing .mw-toggle:hover { color: var(--white); }
+.music-widget.needs-click .mw-toggle { animation: mw-pulse 1.6s ease-in-out infinite; }
+@keyframes mw-pulse { 50% { box-shadow: 0 0 0 6px rgba(20,157,221,.35); } }
+.mw-list {
+  position: absolute; top: calc(100% + 8px); right: 0; min-width: 200px;
+  background: var(--dark); border: 1px solid rgba(168,169,180,.25); border-radius: 10px; padding: 6px;
+  box-shadow: 0 12px 30px rgba(4,11,20,.3);
+}
+.mw-head { font-family: var(--font-nav); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--nav); padding: 6px 10px 4px; }
+.mw-list button {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer;
+  background: transparent; border: 0; border-radius: 6px; padding: 8px 10px;
+  font-family: var(--font-nav); font-size: .88rem; color: rgba(255,255,255,.88);
+}
+.mw-list button:hover, .mw-list button:focus-visible { background: rgba(20,157,221,.18); outline: none; }
+.mw-list button i { width: 14px; color: var(--accent); visibility: hidden; }
+.mw-list button.active i { visibility: visible; }
+.mw-list button.active { color: var(--white); }
+@media (max-width: 991px) { .music-widget:not(.below-nav) { right: 70px; top: 14px; } }
+@media (max-width: 760px) { .music-widget.below-nav { top: 80px; right: 12px; } }
+@media (prefers-reduced-motion: reduce) { .music-widget.needs-click .mw-toggle { animation: none; } }
+@media (max-width: 760px) { .sky-caption { right: 112px; } }

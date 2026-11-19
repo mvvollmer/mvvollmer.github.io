@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case Studies, Miles V. Vollmer</title>
+<meta name="description" content="Technical case studies by Miles V. Vollmer: a $2M+ per month infrastructure optimization, a single-handed 450-dashboard platform migration, and a deployed agentic automation framework.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<button class="side-toggle" aria-label="Menu" onclick="document.body.classList.toggle('side-open')"><i class="fa-solid fa-bars"></i></button>
+
+<aside class="sidebar">
+  <div class="profile">
+    <img src="headshot.jpg" alt="Miles V. Vollmer">
+    <h1><a href="index.html">Miles Vollmer</a></h1>
+    <p class="role">AI & Performance Engineer</p>
+  </div>
+  <div class="social">
+    <a href="https://www.linkedin.com/in/miles-vollmer-192aa0223/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+    <a href="https://github.com/mvvollmer" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+    <a href="mailto:milesvvollmer@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+  </div>
+  <ul class="side-nav">
+    <li><a href="index.html"><i class="fa-solid fa-house"></i>Home</a></li>
+    <li><a href="resume.html"><i class="fa-solid fa-file-lines"></i>Résumé</a></li>
+    <li><a href="case-studies.html" class="active"><i class="fa-solid fa-microscope"></i>Case Studies</a></li>
+    <li><a href="projects.html"><i class="fa-solid fa-diagram-project"></i>Projects</a></li>
+    <li><a href="Miles_Vollmer_Resume.pdf" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i>Résumé PDF</a></li>
+    <li><a href="Miles_Vollmer_CV.pdf" target="_blank" rel="noopener"><i class="fa-solid fa-book-open"></i>CV PDF</a></li>
+    <li><a href="index.html#contact"><i class="fa-solid fa-envelope"></i>Contact</a></li>
+  </ul>
+  <div class="side-foot">© 2026 Miles V. Vollmer</div>
+</aside>
+
+<main class="main">
+
+  <section class="page-hero">
+    <div class="wrap">
+      <div class="kicker">Case Studies</div>
+      <h1>Three systems, start to finish</h1>
+      <p>Client and internal work I delivered at Moviri. The code and client systems are confidential, so clients are anonymized and some figures are rounded; the architecture, engineering decisions, and results are described as built.</p>
+      <div class="actions-row">
+        <a href="Miles_Vollmer_Case_Studies.pdf" class="btn btn-primary" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i> Download the PDF</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASE 1 ============ -->
+  <section class="section" id="uk-bank">
+    <div class="wrap">
+      <div class="section-title">
+        <span class="badge">Case Study 1 · Senior Consultant</span>
+        <h2>Enterprise Capacity Platform Migration and Optimization</h2>
+        <p>Major UK Bank. BMC Helix Continuous Optimization, Java ETL, SQL datamarts, Dynatrace API, ServiceNow, GCP.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">$2M+</div><div class="lbl">per month in infrastructure savings</div></div>
+        <div class="stat"><div class="num">~10,000</div><div class="lbl">servers in the capacity analysis</div></div>
+        <div class="stat"><div class="num">2,300+</div><div class="lbl">hosts in one optimized collector</div></div>
+        <div class="stat"><div class="num">Award</div><div class="lbl">Innovation Award, BMC Helix London Roadshow</div></div>
+      </div>
+      <div class="prose cs-prose">
+        <h3>The problem</h3>
+        <p>The bank was moving its capacity management from a legacy on-premises platform to a SaaS successor. That meant rebuilding every integration that relied on direct database access, reproducing years of custom transformation logic, and giving the business a view of capacity risk and spend it could act on. Across roughly 10,000 servers, much of the capacity was overprovisioned, and there was no consolidated picture of where.</p>
+        <h3>My role</h3>
+        <p>Senior Consultant, responsible with the solution architect for nine of the migration's eleven workstreams. I built integrations and dashboards, co-authored ~50 of the 74 content pages of the contractual Construction Document, presented delivered work to client stakeholders, and onboarded a new team member.</p>
+      </div>
+      <figure class="figure cs-figure">
+        <img src="assets/case-studies/bank.png" alt="Data flow: legacy platform, ServiceNow, cloud pricing, and Dynatrace feed a redesigned ETL framework and zone resolution chain into SaaS datamarts, which power the Business Units dashboard and rightsizing analysis.">
+        <figcaption>Source systems feed the integration layer I built, which populates the platform's datamarts and its two primary outputs.</figcaption>
+      </figure>
+      <div class="prose cs-prose">
+        <h3>Engineering highlights</h3>
+        <ul>
+          <li><strong>Capacity analysis and rightsizing.</strong> I led capacity analysis across ~10,000 overprovisioned servers and fed rightsizing recommendations into the platform's dashboards, priced against the cloud catalogue with a cost extractor I adapted from another engagement. The rightsizing cut infrastructure spend by <strong>$2M+ per month</strong>.</li>
+          <li><strong>Business Units drill-down dashboard.</strong> I built the front and back end. Users start at a platform-wide view and drill through five levels (Business Unit, Platform, Lab, Application, then server, service pool, or database) to the root cause of a risk, with risk projected over 0 to 90, 91 to 180, and 181 to 365 day horizons. It won the <strong>Innovation Award at the BMC Helix London Roadshow</strong>.</li>
+          <li><strong>ETL framework redesign.</strong> The migration's largest workstream. Integrations that had read the legacy database directly were rebuilt around buffer tables, with legacy transformation logic replicated as datamart aggregations orchestrated as task chains. I added event and application data support, migrated all ServiceNow integrations, and promoted the ETLs to production.</li>
+          <li><strong>Three-tier zone resolution.</strong> A per-host lookup for 2,300+ GCP hosts would cost thousands of API calls per run. My chain parses the zone from the hostname first, then builds a map from one bulk request per run, and only then falls back to a cached per-host lookup. API cost scales with unresolved hosts, not fleet size.</li>
+          <li><strong>Datamart Dependencies Extractor.</strong> Three Java ETL modules resolve dashboard, datamart (memoization, cycle detection), and ETL dependencies into a graph rendered as a node-graph dashboard, for impact analysis, safe cleanup, and dev-to-prod checks. Fully configurable, it ships as reusable company IP.</li>
+        </ul>
+        <h3>Outcome</h3>
+        <p>$2M+ per month in savings, an industry award, all ServiceNow integrations and redesigned ETLs in production, reusable company IP, and a co-presented follow-on Phase 1B proposal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASE 2 ============ -->
+  <section class="section alt" id="telecom">
+    <div class="wrap">
+      <div class="section-title">
+        <span class="badge">Case Study 2 · Sole Engineer</span>
+        <h2>BI Platform Modernization: Grafana to Databricks AI/BI</h2>
+        <p>Major Italian Telecommunications Provider. Python, Databricks AI/BI, Unity Catalog, Lakehouse Federation, Redshift, Grafana, Claude Code.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">450 / 450</div><div class="lbl">dashboards delivered to production</div></div>
+        <div class="stat"><div class="num">7,000+</div><div class="lbl">visualizations re-platformed</div></div>
+        <div class="stat"><div class="num">~20 / day</div><div class="lbl">dashboards required by the timeline</div></div>
+        <div class="stat"><div class="num">63</div><div class="lbl">regression tests guarding the toolchain</div></div>
+      </div>
+      <div class="prose cs-prose">
+        <h3>The problem</h3>
+        <p>The client was moving a ~100 TB analytics platform from AWS (Redshift, dbt, Grafana) to Databricks. The estate held 450 Grafana dashboards and 7,000+ visualizations reading from 840 distinct source tables. My audit scored 74% of the dashboards as needing manual work or redesign, and 44% referenced library panels whose definitions were missing from the export. The target format is undocumented and changes between releases. The fixed timeline required ~20 dashboards (~335 visualizations) per working day, one every ~20 minutes, before verification and rework.</p>
+        <h3>My role</h3>
+        <p>I ran the planning phase independently: ~300 in-scope objects mapped into 71 migration clusters, effort estimates reconciled with the commercial proposal, an AWS cost model ($89K/yr), and the root cause of a permissions blocker affecting 41 of 47 data sources. I then owned the dashboard migration end to end as its sole engineer, including ~10 client review meetings as the main point of contact.</p>
+      </div>
+      <figure class="figure cs-figure">
+        <img src="assets/case-studies/telecom.png" alt="Pipeline: Grafana export, audit, SQL extraction, transpilation, AI agent for mapping and spec, build from prototypes, live preview, numeric validation, guarded delivery, and human review.">
+        <figcaption>The AI agent acts at one step; everything else is deterministic, tested code, and delivery never commits or deploys on its own.</figcaption>
+      </figure>
+      <div class="prose cs-prose">
+        <h3>Engineering highlights</h3>
+        <ul>
+          <li><strong>The agent acts at one point; code does the rest.</strong> LLMs are good at judgment (mapping tables to Unity Catalog, writing a dashboard spec) and unreliable at repetitive exact work. Everything else runs through 15 deterministic Python tools protected by a 63-test regression suite, and widgets are assembled from prototypes cut from real dashboards, never hand-written JSON.</li>
+          <li><strong>Guardrails for writing into another team's repository.</strong> Delivery resolves every path against an allow-list, dry-runs first, creates a branch, and stops. A pre-execution hook blocks commits, pushes, production deploys, and credential reads regardless of agent permissions, so every change reaches production through a reviewed diff.</li>
+          <li><strong>Importing is not verification.</strong> The platform accepts dashboards that do not work, so I made live preview with every filter exercised mandatory, automated it with a live field-audit tool, and validated every dataset numerically against a Grafana baseline. A comparison that returns zero rows counts as a failure, not a match.</li>
+          <li><strong>Federated query failure modes.</strong> Composite keys or computed columns in a WHERE clause break predicate pushdown, WITH RECURSIVE over a federated table never returns, and some catalog tables are listed but unreadable. Each was diagnosed, documented, and turned into a rewrite rule in the tooling.</li>
+          <li><strong>Reverse-engineering the platform.</strong> I decoded undocumented AI/BI internals (threshold coloring, per-cell formatting, dynamic titles, sparklines, cascading filters) into reusable build capabilities, so a fix found on one dashboard reached every remaining one. Several improve on the originals.</li>
+          <li><strong>AI-assisted engineering at scale.</strong> Context curation, a dated decision log of 175+ entries, and regression gates let one engineer sustain enterprise throughput: <strong>100+ dashboards in the first two weeks</strong>.</li>
+        </ul>
+        <h3>Outcome</h3>
+        <p>All 450 dashboards migrated single-handed, on the fixed timeline: every one numerically validated, approved by the client, and deployed to production, including 150+ the client modified mid-migration. I also wrote the handover, runbook, and a plain-language design-rationale guide for client stakeholders.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CASE 3 ============ -->
+  <section class="section" id="hoao">
+    <div class="wrap">
+      <div class="section-title">
+        <span class="badge">Case Study 3 · Designer & Sole Developer</span>
+        <h2>HOAO: Human-Oriented Automation Orchestration</h2>
+        <p>Moviri AI Labs. Python, Google ADK, Gemini, FastAPI, Server-Sent Events, pytest, Docker, Google Cloud Run.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="num">6</div><div class="lbl">design iterations</div></div>
+        <div class="stat"><div class="num">8</div><div class="lbl">loosely coupled packages</div></div>
+        <div class="stat"><div class="num">3</div><div class="lbl">model tiers, routed automatically</div></div>
+        <div class="stat"><div class="num">50+</div><div class="lbl">automated tests, about one second</div></div>
+      </div>
+      <div class="prose cs-prose">
+        <h3>The problem</h3>
+        <p>Internal automation requests were each built as one-off scripts. A generic LLM agent can attempt such tasks, but its work is not reusable, auditable, or cost-controlled. The goal was a framework in which agents turn a task into a tested, human-approved tool, so the second time a task arrives it is a cache hit rather than another generation.</p>
+        <h3>My role</h3>
+        <p>I designed, built, and deployed the framework alone across six iterations, ending in HOAO, which merges a hierarchical agent design with a self-generating tool loop. It runs as a single container on Google Cloud Run with identity-aware authentication and GitHub Actions CI, and the same stack powers an LLM onboarding agent I built for HR.</p>
+      </div>
+      <figure class="figure cs-figure cs-figure-narrow">
+        <img src="assets/case-studies/hoao.png" alt="HOAO architecture: chat UI, interaction manager, agent hierarchy, efficiency maximizer, and a tool pipeline of develop, test, and human approval feeding a signature cache.">
+        <figcaption>A cache miss triggers generation, sandbox testing, and human approval; approved tools are reused on later requests.</figcaption>
+      </figure>
+      <div class="prose cs-prose">
+        <h3>Engineering highlights</h3>
+        <ul>
+          <li><strong>One agent class, configuration-driven roles.</strong> Three near-identical agent classes collapsed into one BaseAgent parameterized by role, with behavior loaded from rule files. A new kind of agent is a text file, not a subclass.</li>
+          <li><strong>Human-in-the-loop tool generation.</strong> An LLM writes a Python tool; it runs in a sandbox, with errors sent back for repair up to three times; then the pipeline suspends on an asynchronous future until a person approves, rejects, or edits it. No generated code runs on real input without approval.</li>
+          <li><strong>Reuse through a signature cache.</strong> Approved tools persist under a SHA-256 signature of the normalized task, with atomic writes; tools are shared across sessions while conversation state stays isolated.</li>
+          <li><strong>Cost-aware model routing.</strong> Every LLM call is logged. A difficulty estimator routes each task to a cheap, mid, or premium Gemini tier, and a tuner shifts the boundaries from observed success rates, with a telemetry dashboard over all of it.</li>
+          <li><strong>A single bridge between people and agents.</strong> The interaction manager owns sessions, pending approvals, and a Server-Sent Events stream with backlog replay, so reconnecting clients see the full trace.</li>
+        </ul>
+        <h3>Outcome</h3>
+        <p>A complete, documented, deployed framework with a thorough test suite. It reflects how I approach AI work generally: let models handle judgment, keep execution deterministic and tested, and put a human approval wherever generated work becomes real.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+<script src="js/music.js"></script>
+</body>
+</html>
