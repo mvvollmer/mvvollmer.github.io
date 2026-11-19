@@ -449,7 +449,7 @@
   function music(on) {
     if (on === musicOn || !window.SiteMusic) return;
     musicOn = on;
-    if (on) SiteMusic.hoverStart().then((ok) => { hint.hidden = ok; if (!ok) hint.textContent = "Click once to let the stars play music"; });
+    if (on) SiteMusic.hoverStart().then((ok) => { hint.hidden = ok; if (!ok) hint.textContent = "Click once on the stars to play music"; });
     else SiteMusic.hoverEnd();
   }
   function setHover(con) {
