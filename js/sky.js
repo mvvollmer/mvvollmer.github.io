@@ -19,7 +19,7 @@
 
   const D2R = Math.PI / 180, R2D = 180 / Math.PI;
   const ACCENT = "20,157,221";
-  const DATA = "data/sky/";
+  const DATA = "data/sky/", VERSION = "202611191620";   // VERSION is updated by bump-version.sh
 
   // ---------- places (real coordinates and IANA time zones; DST handled by the browser) ----------
   const PLACES = [
@@ -116,12 +116,13 @@
     const gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0);
     return (((gmst + state.place.lon) % 360) + 360) % 360 * D2R;
   }
-  // unit vector (east, north, up) for an object at the current sidereal time
+  // unit vector (ve = east, vn = north, vu = up) for an object at the current sidereal time;
+  // named "v*" so they never collide with catalogue fields such as a star's name (n)
   function horizon(o, lst, sl, cl) {
     const h = lst - o.raRad, ch = Math.cos(h);
-    o.e = -o.cd * Math.sin(h);
-    o.n = o.sd * cl - o.cd * sl * ch;
-    o.u = sl * o.sd + cl * o.cd * ch;
+    o.ve = -o.cd * Math.sin(h);
+    o.vn = o.sd * cl - o.cd * sl * ch;
+    o.vu = sl * o.sd + cl * o.cd * ch;
   }
   // low-precision Sun and Moon (accurate to a fraction of a degree, plenty for a sky map)
   function sunMoon() {
@@ -166,12 +167,12 @@
     B = { c, r, u };
   }
   function proj(o, limit = -0.35) {
-    const dz = o.e * B.c[0] + o.n * B.c[1] + o.u * B.c[2];
+    const dz = o.ve * B.c[0] + o.vn * B.c[1] + o.vu * B.c[2];
     if (dz < limit) return null;
     const k = 2 / (1 + dz) * scale;
-    return { x: W / 2 + k * (o.e * B.r[0] + o.n * B.r[1] + o.u * B.r[2]), y: H / 2 - k * (o.e * B.u[0] + o.n * B.u[1] + o.u * B.u[2]) };
+    return { x: W / 2 + k * (o.ve * B.r[0] + o.vn * B.r[1] + o.vu * B.r[2]), y: H / 2 - k * (o.ve * B.u[0] + o.vn * B.u[1] + o.vu * B.u[2]) };
   }
-  const projAltAz = (alt, az) => proj({ e: Math.cos(alt) * Math.sin(az), n: Math.cos(alt) * Math.cos(az), u: Math.sin(alt) });
+  const projAltAz = (alt, az) => proj({ ve: Math.cos(alt) * Math.sin(az), vn: Math.cos(alt) * Math.cos(az), vu: Math.sin(alt) });
 
   function resize() {
     const rect = root.getBoundingClientRect();
@@ -318,7 +319,7 @@
     }
 
     // named stars' positions, then constellation figures
-    for (const s of named) { s.p = proj(s); s.alt = Math.asin(Math.max(-1, Math.min(1, s.u))); }
+    for (const s of named) { s.p = proj(s); s.alt = Math.asin(Math.max(-1, Math.min(1, s.vu))); }
     updateFocus();
     ctx.lineWidth = 1; ctx.setLineDash([2, 6]); ctx.strokeStyle = "rgba(168,169,180,0.07)";
     for (const altDeg of [30, 60]) {
@@ -566,7 +567,7 @@
   });
 
   // ---------- catalogues (compact local copies; see data/sky/README.md) ----------
-  Promise.all(["stars.json", "messier.json", "milkyway.json"].map((f) => fetch(DATA + f).then((r) => r.ok ? r.json() : null).catch(() => null)))
+  Promise.all(["stars.json", "messier.json", "milkyway.json"].map((f) => fetch(DATA + f + "?v=" + VERSION).then((r) => r.ok ? r.json() : null).catch(() => null)))
     .then(([stars, messier, milky]) => {
       if (stars) {
         bg = stars.map(([ra, dec, m, bv]) => prep({ ra, dec, m, col: bvColor(bv === null ? NaN : bv),
