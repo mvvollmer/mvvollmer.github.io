@@ -23,6 +23,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* the hidden attribute always wins over display rules */
 html { scroll-behavior: smooth; }
 body {
   margin: 0;
@@ -393,3 +394,100 @@ img { max-width: 100%; }
 }
 .sky-panel-actions button:hover, .sky-panel-actions button:focus-visible { background: var(--accent); outline: none; }
 .sky-panel[hidden], .mw-list[hidden] { display: none; }
+
+/* =========================================================
+   POKER PAGE
+   ========================================================= */
+.poker-section { padding-top: 40px; }
+.poker-setup { display: grid; grid-template-columns: 1.2fr 1fr; gap: 28px; align-items: start; }
+.setup-main { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 26px; }
+.setup-main h2 { font-size: 1.4rem; }
+.seat-count, .bot-pick { display: grid; gap: 6px; font-family: var(--font-nav); font-size: .85rem; color: var(--muted); }
+.seat-count select, .bot-pick select { font: inherit; font-size: .95rem; color: var(--heading); padding: 9px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--white); }
+.bot-seats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin: 10px 0 18px; }
+.setup-note { font-size: .9rem; color: var(--muted); margin: 14px 0 6px; }
+.setup-side { display: grid; gap: 14px; }
+.agent-card { background: var(--light); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.agent-card h3 { font-size: 1rem; margin-bottom: 6px; }
+.agent-card h3 i { color: var(--accent); margin-right: 6px; }
+.agent-card p { margin: 0; font-size: .9rem; color: var(--muted); }
+
+.poker-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start; }
+.felt {
+  position: relative; aspect-ratio: 16 / 10; border-radius: 48% / 46%;
+  background: radial-gradient(ellipse at 50% 40%, #12507a 0%, #0b3354 55%, #071d33 100%);
+  border: 14px solid #1b2b3d; box-shadow: inset 0 0 50px rgba(0,0,0,.45), 0 18px 40px rgba(4,11,20,.25);
+}
+.felt-centre { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); text-align: center; }
+.board { display: flex; gap: 6px; justify-content: center; }
+.pot { margin-top: 10px; font-family: var(--font-nav); font-weight: 600; color: #e8f2fa; font-size: .95rem; }
+.pcard {
+  width: 46px; height: 64px; border-radius: 6px; background: #fff; color: #111; display: inline-flex; flex-direction: column;
+  align-items: center; justify-content: center; font-family: var(--font-nav); box-shadow: 0 2px 6px rgba(0,0,0,.35); line-height: 1;
+}
+.pcard b { font-size: 1.05rem; }
+.pcard i { font-style: normal; font-size: 1.2rem; }
+.pcard.red { color: #c8102e; }
+.pcard.back { background: repeating-linear-gradient(45deg, #149ddd 0 6px, #0d7fb6 6px 12px); border: 3px solid #fff; }
+.pcard.slot { background: rgba(255,255,255,.06); border: 1px dashed rgba(255,255,255,.18); box-shadow: none; }
+.seat { position: absolute; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 4px; width: 132px; transition: opacity .3s; }
+.seat-cards { display: flex; gap: 3px; min-height: 52px; }
+.seat-cards .pcard { width: 36px; height: 52px; }
+.seat-cards .pcard b { font-size: .9rem; } .seat-cards .pcard i { font-size: 1rem; }
+.seat-plate {
+  background: rgba(4,11,20,.88); color: #fff; border: 2px solid rgba(168,169,180,.35); border-radius: 10px;
+  padding: 5px 12px; text-align: center; min-width: 110px; font-family: var(--font-nav); transition: border-color .2s, box-shadow .2s;
+}
+.seat-name { display: block; font-size: .8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.seat-stack { display: block; font-size: .78rem; color: #9fd3f0; }
+.seat.acting .seat-plate { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20,157,221,.35); }
+.seat.winner .seat-plate { border-color: #f2c14e; box-shadow: 0 0 0 3px rgba(242,193,78,.35); }
+.seat.folded { opacity: .45; }
+.seat.me .seat-plate { background: var(--accent-dark); }
+.seat-bet { min-height: 18px; font-family: var(--font-nav); font-size: .8rem; font-weight: 600; color: #f2c14e; }
+.seat-dealer { position: absolute; right: -6px; top: 44px; width: 22px; height: 22px; border-radius: 50%; background: #fff; color: #111; font: 700 .7rem var(--font-nav); display: grid; place-items: center; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
+.seat-say { position: absolute; top: -18px; font-family: var(--font-nav); font-size: .75rem; color: #fff; background: rgba(20,157,221,.9); border-radius: 50px; padding: 1px 9px; white-space: nowrap; }
+.seat-say:empty { display: none; }
+.seat-say.pop { animation: say-pop .25s ease; }
+@keyframes say-pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 18px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+.controls kbd { font-size: .7rem; opacity: .6; margin-left: 4px; }
+.raise-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex: 1; }
+.quick { display: flex; gap: 6px; }
+.quick button { font: 500 .8rem var(--font-nav); padding: 7px 10px; border-radius: 50px; border: 1px solid var(--border); background: var(--light); cursor: pointer; }
+.quick button:hover { border-color: var(--accent); color: var(--accent-dark); }
+#raise-slider { flex: 1; min-width: 120px; accent-color: var(--accent); }
+#raise-amt { width: 84px; font: inherit; padding: 8px; border: 1px solid var(--border); border-radius: 8px; }
+.table-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 14px; font-size: .88rem; color: var(--muted); }
+.table-actions select { font: inherit; padding: 4px 6px; border: 1px solid var(--border); border-radius: 6px; }
+.link-btn { background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0; }
+
+.poker-panel { display: grid; gap: 14px; }
+.panel-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+.panel-card h3 { font-size: 1rem; margin-bottom: 10px; }
+.scores { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: .9rem; }
+.scores li { display: flex; justify-content: space-between; gap: 10px; }
+.scores small { color: var(--muted); }
+.scores .up { color: #1a8f4a; } .scores .down { color: #c8102e; }
+.scores .muted, .muted { color: var(--muted); font-size: .82rem; }
+.toggle { display: flex; gap: 8px; align-items: center; font-family: var(--font-nav); font-size: .9rem; font-weight: 600; color: var(--heading); margin-bottom: 8px; }
+.thinking { font-size: .85rem; }
+.thinking p { margin: 0 0 8px; }
+.think { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.think th { text-align: left; color: var(--muted); font-weight: 500; padding: 4px 4px; border-bottom: 1px solid var(--border); }
+.think td { padding: 5px 4px; border-bottom: 1px solid var(--border); position: relative; }
+.think .bar { display: inline-block; height: 6px; background: var(--accent); border-radius: 3px; margin-right: 6px; vertical-align: middle; max-width: 60px; }
+.log { list-style: none; padding: 0; margin: 0; max-height: 320px; overflow-y: auto; font-size: .82rem; display: grid; gap: 4px; }
+.log em { color: var(--accent-dark); font-style: normal; }
+
+@media (max-width: 1100px) { .poker-layout { grid-template-columns: 1fr; } .poker-setup { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .felt { aspect-ratio: 3 / 4; border-radius: 44% / 30%; border-width: 8px; }
+  .seat { width: 96px; } .seat-plate { min-width: 84px; padding: 4px 6px; }
+  .seat-cards .pcard { width: 26px; height: 38px; } .pcard { width: 27px; height: 39px; }
+  .pcard b { font-size: .8rem; } .pcard i { font-size: .85rem; }
+  .board { gap: 3px; } .felt-centre { top: 47%; }
+  .seat { width: 84px; } .seat-plate { min-width: 76px; }
+  .seat-name { font-size: .7rem; } .seat-dealer { top: 32px; }
+}

@@ -1,0 +1,6 @@
+{
+ "default": "rebel.json",
+ "4": "rebel-4p.json",
+ "5": "rebel-5p.json",
+ "6": "rebel-6p.json"
+}
