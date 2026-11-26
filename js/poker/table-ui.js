@@ -100,10 +100,11 @@
   }
 
   // ------------------------------------------------------------------ table rendering
-  function cardHTML(c, hidden) {
+  function cardHTML(c, hidden, extra = "") {
     if (hidden) return `<span class="pcard back"></span>`;
     const s = C.suitOf(c), r = C.RANKS[c >> 2] === "T" ? "10" : C.RANKS[c >> 2];
-    return `<span class="pcard ${s === 1 || s === 2 ? "red" : ""}"><b>${r}</b><i>${SUIT_SYM[s]}</i></span>`;
+    const tip = extra === "runout" ? ` title="Not dealt: the card that would have come"` : "";
+    return `<span class="pcard ${s === 1 || s === 2 ? "red" : ""} ${extra}"${tip}><b>${r}</b><i>${SUIT_SYM[s]}</i></span>`;
   }
 
   function buildSeats() {
@@ -138,10 +139,14 @@
       el.querySelector(".seat-dealer").hidden = seat !== state.button;
       if (h.stacks[i] === 0 && !folded && !h.done) el.querySelector(".seat-say").textContent = "All in";
     });
-    $("#board").innerHTML = h.board.map((c) => cardHTML(c)).join("") + "<span class='pcard slot'></span>".repeat(5 - h.board.length);
+    // once a hand is over, show the rest of the board as it would have run out (faded), so a fold can be judged
+    const runout = h.done ? h.fullBoard.slice(h.board.length, 5) : [];
+    $("#board").innerHTML = h.board.map((c) => cardHTML(c)).join("") + runout.map((c) => cardHTML(c, false, "runout")).join("")
+      + "<span class='pcard slot'></span>".repeat(5 - h.board.length - runout.length);
     const pot = h.committed.reduce((a, b) => a + b, 0) - h.bets.reduce((a, b) => a + b, 0);   // chips already in the middle
     const total = h.committed.reduce((a, b) => a + b, 0);
-    $("#pot").innerHTML = `${chipsHTML(h.done ? total : pot, 8)}<span>Pot ${money(total)}</span>`;
+    $("#pot").innerHTML = `${chipsHTML(h.done ? total : pot, 8)}<span>Pot ${money(total)}</span>`
+      + (runout.length ? `<small class="runout-note">Faded cards: what would have come</small>` : "");
   }
 
   function say(seat, text) {
@@ -273,6 +278,7 @@
         $("#seat-" + seat).classList.add("winner");
       }
     });
+    if (h.board.length < 5) log(`<em>Cards that would have come: ${h.fullBoard.slice(h.board.length, 5).map(C.cardStr).join(" ")} (board ${h.fullBoard.map(C.cardStr).join(" ")})</em>`);
     if (shown) log(`<em>Showdown: ${state.seatOf.map((seat, i) => h.folded[i] ? null : `${state.players[seat].name} ${h.hole[i].map(C.cardStr).join(" ")} (${C.CATEGORY_NAMES[C.categoryOf(h.scores[i])].toLowerCase()})`).filter(Boolean).join(" · ")}</em>`);
     renderScores();
     $("#next-btn").hidden = false;
