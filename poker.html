@@ -6,7 +6,7 @@
 <title>Play Poker, Miles V. Vollmer</title>
 <meta name="description" content="Play six-max no-limit Texas Hold'em in your browser against the reinforcement learning agents from Miles Vollmer's paper: a ReBeL-style agent, Q-learning, and random bots.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="styles.css?v=202611251326">
+<link rel="stylesheet" href="styles.css?v=202611260943">
 </head>
 <body>
 
@@ -29,8 +29,8 @@
     <li><a href="case-studies.html"><i class="fa-solid fa-microscope"></i>Case Studies</a></li>
     <li><a href="projects.html"><i class="fa-solid fa-diagram-project"></i>Projects</a></li>
     <li><a href="poker.html" class="active"><i class="fa-solid fa-diamond"></i>Play Poker</a></li>
-    <li><a href="Miles_Vollmer_Resume.pdf?v=202611251326" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i>Résumé PDF</a></li>
-    <li><a href="Miles_Vollmer_CV.pdf?v=202611251326" target="_blank" rel="noopener"><i class="fa-solid fa-book-open"></i>CV PDF</a></li>
+    <li><a href="Miles_Vollmer_Resume.pdf?v=202611260943" target="_blank" rel="noopener"><i class="fa-solid fa-download"></i>Résumé PDF</a></li>
+    <li><a href="Miles_Vollmer_CV.pdf?v=202611260943" target="_blank" rel="noopener"><i class="fa-solid fa-book-open"></i>CV PDF</a></li>
     <li><a href="index.html#contact"><i class="fa-solid fa-envelope"></i>Contact</a></li>
   </ul>
   <div class="side-foot">© 2026 Miles V. Vollmer</div>
@@ -60,7 +60,14 @@
           </label>
           <p class="setup-note">You take seat 1. Choose who fills the rest:</p>
           <div id="bot-seats" class="bot-seats"></div>
-          <p class="setup-note">Blinds 1/2, everyone starts with 200 chips (100 big blinds). Busted players reload automatically.</p>
+          <label class="seat-count">Bot betting
+            <select class="bot-style">
+              <option value="trained">As trained (aggressive)</option>
+              <option value="conservative">Conservative</option>
+            </select>
+          </label>
+          <p class="setup-note style-note">Conservative keeps every bot's own decision-making but caps raises at the pot, saves all-ins for very strong or pot-committed hands, and stops re-raise wars once a street has been raised twice.</p>
+          <p class="setup-note">Blinds $1/$2, everyone buys in for $200 (100 big blinds). Busted players reload automatically.</p>
           <button id="start-btn" class="btn btn-primary">Deal me in</button>
         </div>
         <div class="setup-side">
@@ -92,12 +99,20 @@
                 </div>
                 <input id="raise-slider" type="range" aria-label="Raise amount">
                 <input id="raise-amt" type="number" aria-label="Raise to">
+                <span id="raise-chips" class="raise-chips" aria-hidden="true"></span>
                 <button id="raise-btn" class="btn btn-primary">Raise</button>
               </div>
+            </div>
+            <div class="chip-legend" aria-label="Chip values">
+              <span><i class="chip chip-white"></i>$1</span><span><i class="chip chip-red"></i>$5</span><span><i class="chip chip-green"></i>$25</span>
+              <span><i class="chip chip-black"></i>$100</span><span><i class="chip chip-purple"></i>$500</span><span><i class="chip chip-orange"></i>$1,000</span>
             </div>
             <div class="table-actions">
               <button id="next-btn" class="btn btn-primary" hidden>Next hand</button>
               <label><input type="checkbox" id="auto-next"> Deal next hand automatically</label>
+              <label>Bot betting
+                <select class="bot-style"><option value="trained">As trained</option><option value="conservative">Conservative</option></select>
+              </label>
               <label>Bot speed
                 <select id="speed"><option value="1200">Slow</option><option value="750" selected>Normal</option><option value="300">Fast</option></select>
               </label>
@@ -131,35 +146,42 @@
         <h2>How it works</h2>
       </div>
       <div class="prose cs-prose">
-        <p>The agents come from <a href="papers/vollmer-senthilkumar-poker-rl-2024.pdf?v=202611251326" target="_blank" rel="noopener">my CS 4180 paper</a> with Dhananjai Senthil Kumar. In the original project the open-source poker environment we used had pot distribution bugs, which we flagged as a limitation. For this page I rebuilt the pipeline:</p>
+        <p>The agents come from <a href="papers/vollmer-senthilkumar-poker-rl-2024.pdf?v=202611260943" target="_blank" rel="noopener">my CS 4180 paper</a> with Dhananjai Senthil Kumar. In the original project the open-source poker environment we used had pot distribution bugs, which we flagged as a limitation. For this page I rebuilt the pipeline:</p>
         <ul>
           <li><strong>Rules-exact training.</strong> The agents were retrained in <a href="https://github.com/uoftcprg/pokerkit" target="_blank" rel="noopener">PokerKit</a>, the University of Toronto's extensively tested poker library, which handles side pots, short all-ins, and split pots correctly.</li>
           <li><strong>A browser engine verified against it.</strong> The game you are playing is a JavaScript engine I wrote to follow PokerKit's rules, checked against PokerKit on 70,000 random hands (over 480,000 decisions) with zero disagreements.</li>
           <li><strong>The same agents, in your browser.</strong> The ReBeL agent's policy, value, and bet-sizing networks and the Q-learning table were exported from training and run here with no server; their outputs were checked against the Python originals.</li>
         </ul>
-        <h3>A different model for each table size</h3>
-        <p>A hand worth betting at a four-handed table can be a fold against five opponents. One network trained on every table size learned heads-up play well but played far too tight six-handed, so I fine-tuned a specialist for each table size and kept whichever model won more in a head-to-head test: the general model for two and three players, and specialists for four, five, and six. The page loads only the model for the table you pick.</p>
-        <h3>How the agents perform</h3>
-        <p>The ReBeL agent you play against, measured over 20,000 hands per table in the training environment, in big blinds won per 100 hands (95% confidence intervals). The field around it alternates Random and Q-learning bots:</p>
+        <h3>Reading opponents</h3>
+        <p>The newest ReBeL agent knows who it is playing: each opponent is labeled Random, Q-learning, ReBeL, or unknown (which is how you appear), and it tracks their tendencies through the session, such as how often they fold to a bet and how aggressive they are. It also guesses what each opponent holds: every player starts each hand with all 1,326 possible hole-card pairs, and after every action those hands are re-weighted by how likely that type of player, with those tendencies, would be to take that action with each one. A raise from a tight player narrows them to strong hands; a raise from a Random bot tells it nothing. Its equity is then simulated against those estimated hands, not random ones. During training a share of opponents were shown as "unknown", so it learned to read players from how they bet alone.</p>
+        <h3>The best model for each table size</h3>
+        <p>A hand worth betting four-handed can be a fold against five opponents, so each table size uses whichever model won its head-to-head test. The tests use duplicate poker, the method tournaments use to remove luck: every deal is played twice with the two agents swapping seats, so both get exactly the same cards and only their decisions differ, across five independent runs of 3,000 deals (a control of the older agent against itself came out even at every table size).</p>
         <ul>
-          <li>Heads-up vs. Q-learning: <strong>+1,742 bb/100</strong> (±105)</li>
-          <li>Heads-up vs. Random: <strong>+950 bb/100</strong> (±62)</li>
-          <li>Three-handed: <strong>+1,417 bb/100</strong> (±113)</li>
-          <li>Four-handed: <strong>+1,096 bb/100</strong> (±103), up from +758 with the general model</li>
-          <li>Five-handed: <strong>+355 bb/100</strong> (±68), up from +52</li>
-          <li>Six-handed: <strong>+199 bb/100</strong> (±51), up from break-even (+1)</li>
+          <li>Heads-up: the opponent-reading agent beat the previous agent by <strong>+1,120 bb/100</strong> (±97), ahead in every run.</li>
+          <li>Three-handed: even (+19 ±119), so the table uses the opponent-reading agent for its reads.</li>
+          <li>Five-handed: an opponent-reading specialist beat the previous specialist by <strong>+123 bb/100</strong> (±104), ahead in every run.</li>
+          <li>Four- and six-handed: the earlier specialists still win, so those tables keep them for now.</li>
         </ul>
-        <p>For reference, the Q-learning agent beats Random heads-up by +1,000 bb/100 (±61).</p>
-        <p>Turn on <em>Show AI thinking</em> to watch the ReBeL agent's equity estimate and how its search weighs each option and bet size before it acts.</p>
+        <h3>How the agents perform</h3>
+        <p>Against a field alternating Random and Q-learning bots, over 20,000 hands per table, in big blinds won per 100 hands (95% confidence intervals):</p>
+        <ul>
+          <li>Heads-up vs. Random: <strong>+1,030 bb/100</strong> (±73)</li>
+          <li>Three-handed: <strong>+1,457 bb/100</strong> (±122)</li>
+          <li>Four-handed: <strong>+1,093 bb/100</strong> (±110)</li>
+          <li>Six-handed: <strong>+162 bb/100</strong> (±50)</li>
+        </ul>
+        <p>With every opponent shown as "unknown", the opponent-reading agent still won +1,057 bb/100 heads-up and +1,158 three-handed, so it reads unlabeled players from their betting. For reference, Q-learning beats Random heads-up by +1,000 bb/100 (±61).</p>
+        <p>Turn on <em>Show AI thinking</em> to watch the ReBeL agent's equity estimate, its read on each opponent (at two-, three-, and five-player tables), and how its search weighs each option and bet size before it acts.</p>
       </div>
     </div>
   </section>
 
 </main>
-<script src="js/music.js?v=202611251326"></script>
-<script src="js/poker/cards.js?v=202611251326"></script>
-<script src="js/poker/engine.js?v=202611251326"></script>
-<script src="js/poker/bots.js?v=202611251326"></script>
-<script src="js/poker/table-ui.js?v=202611251326"></script>
+<script src="js/music.js?v=202611260943"></script>
+<script src="js/poker/cards.js?v=202611260943"></script>
+<script src="js/poker/ranges.js?v=202611260943"></script>
+<script src="js/poker/engine.js?v=202611260943"></script>
+<script src="js/poker/bots.js?v=202611260943"></script>
+<script src="js/poker/table-ui.js?v=202611260943"></script>
 </body>
 </html>

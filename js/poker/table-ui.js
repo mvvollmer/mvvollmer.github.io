@@ -1,12 +1,28 @@
 /* Poker page: seats, dealing, the human's controls, and the bots, on top of engine.js and bots.js. */
 (function () {
-  const C = window.PokerCards, E = window.PokerEngine, B = window.PokerBots;
+  const C = window.PokerCards, E = window.PokerEngine, B = window.PokerBots, R = window.PokerRanges;
   const BB = 2, SB = 1, START = 200;                       // 1/2 blinds, 100 big blind stacks
   const $ = (s, r = document) => r.querySelector(s);
   const SUIT_SYM = ["♣", "♦", "♥", "♠"];
+  // casino chips: $1 white, $5 red, $25 green, $100 black, $500 purple, $1,000 orange (display only;
+  // the engine counts in $1 units and the agents reason in big blinds and pot fractions)
+  const CHIPS = [[1000, "orange"], [500, "purple"], [100, "black"], [25, "green"], [5, "red"], [1, "white"]];
+  const money = (v) => "$" + Math.round(v).toLocaleString("en-US");
+  function chipsHTML(amount, maxPerColumn = 6) {
+    if (!amount) return "";
+    let left = amount;
+    const cols = [];
+    for (const [value, color] of CHIPS) {
+      const k = Math.floor(left / value);
+      if (k) { cols.push({ color, value, k }); left -= k * value; }
+    }
+    return `<span class="chips" title="${money(amount)}">` + cols.map(({ color, value, k }) =>
+      `<span class="chip-col" title="${k} × ${money(value)}">` +
+      Array.from({ length: Math.min(k, maxPerColumn) }, () => `<i class="chip chip-${color}"></i>`).join("") + `</span>`).join("") + `</span>`;
+  }
   const BOT_TYPES = { rebel: "ReBeL", q: "Q-learning", random: "Random" };
   const BOT_BLURB = {
-    rebel: "Policy, value, and bet-sizing networks trained through self-play, with a look-ahead search over its options. Four- to six-handed tables use models fine-tuned for that table size.",
+    rebel: "Policy, value, and bet-sizing networks trained through self-play, with a look-ahead search. At two-, three-, and five-player tables it knows who each opponent is and estimates their hand from how they bet; four- and six-handed tables use earlier specialists that still win their head-to-head tests.",
     q: "Tabular Q-learning over a simplified view of the hand: equity, pot odds, position, and players left.",
     random: "Picks a legal action at random. The baseline every agent in the paper had to beat.",
   };
@@ -14,24 +30,32 @@
   // version stamp from this script's own URL (?v=...), reused so model files refresh with the site
   const VERSION = ((document.currentScript && document.currentScript.src.match(/[?&]v=([\w-]+)/)) || [])[1] || "";
   const modelCache = {};
-  const state = { players: [], button: 0, hand: null, seatOf: null, history: null, handNo: 0, busy: false, thinking: true, speed: 750 };
+  const state = { style: "trained", players: [], button: 0, hand: null, seatOf: null, history: null, handNo: 0, busy: false, thinking: true, speed: 750 };
 
   // ------------------------------------------------------------------ setup
   // each table size can have its own ReBeL model (manifest.json maps players -> file)
   const fetchJSON = (f) => fetch(`data/poker/${f}${VERSION ? "?v=" + VERSION : ""}`).then((r) => { if (!r.ok) throw new Error(f); return r.json(); });
   async function loadModels(n) {
     if (modelCache[n]) return modelCache[n];
-    let file = "rebel.json";
+    let file = "rebel-v2.json";
     try { const m = await fetchJSON("manifest.json"); file = m[String(n)] || m.default || file; } catch (e) { /* fall back to the general model */ }
-    const [rebel, q] = await Promise.all([fetchJSON(file), fetchJSON("qlearning.json")]);
+    const [rebel, q, typeProfiles, preflopStrength] = await Promise.all(
+      [fetchJSON(file), fetchJSON("qlearning.json"), fetchJSON("type_profiles.json"), fetchJSON("preflop_strength.json")]);
+    R.setData({ typeProfiles, preflopStrength });
     return (modelCache[n] = { rebel, q, file });
   }
   let models = null;
 
   function makeBot(type) {
-    if (type === "rebel") return new B.RebelBot(models.rebel);
-    if (type === "q") return new B.QBot(models.q);
-    return new B.RandomBot();
+    const bot = type === "rebel" ? new B.RebelBot(models.rebel) : type === "q" ? new B.QBot(models.q) : new B.RandomBot();
+    bot.style = state.style;
+    return bot;
+  }
+  function setStyle(style) {
+    state.style = style;
+    document.querySelectorAll(".bot-style").forEach((sel) => { sel.value = style; });
+    state.players.forEach((p) => { if (p.bot) p.bot.style = style; });
+    try { localStorage.setItem("poker-style", style); } catch (e) { /* storage unavailable */ }
   }
 
   function renderSetup() {
@@ -64,6 +88,8 @@
       state.players.push({ name: BOT_TYPES[t] + (same > 1 ? " " + count[t] : ""), type: t, bot: makeBot(t), stack: START, net: 0 });
     });
     state.history = state.players.map(() => []);
+    // what the table learns about each player across the session; you appear to the bots as "unknown"
+    state.models = state.players.map((p) => new R.PlayerModel(p.type === "human" ? "unknown" : p.type));
     state.button = Math.floor(Math.random() * n);
     state.handNo = 0;
     $("#setup").hidden = true;
@@ -87,7 +113,9 @@
       // seat 0 (you) at the bottom centre, others clockwise around the oval
       const ang = Math.PI / 2 + (2 * Math.PI * seat) / n;
       const x = 50 + 44 * Math.cos(ang), y = 50 + 40 * Math.sin(ang);
-      wrap.insertAdjacentHTML("beforeend", `<div class="seat ${seat === 0 ? "me" : ""}" id="seat-${seat}" style="left:${x}%;top:${y}%">
+      // bets sit in front of each player, pushed toward the middle of the table
+      const bx = (-Math.cos(ang) * 92).toFixed(0), by = (-Math.sin(ang) * 54).toFixed(0);
+      wrap.insertAdjacentHTML("beforeend", `<div class="seat ${seat === 0 ? "me" : ""}" id="seat-${seat}" style="left:${x}%;top:${y}%;--bx:${bx}px;--by:${by}px">
         <div class="seat-cards"></div>
         <div class="seat-plate"><span class="seat-name">${p.name}</span><span class="seat-stack"></span></div>
         <div class="seat-bet"></div><div class="seat-dealer" hidden>D</div><div class="seat-say"></div>
@@ -103,15 +131,17 @@
       el.classList.toggle("folded", folded);
       el.classList.toggle("acting", !h.done && h.actor === i);
       if (!h.done) el.classList.remove("winner");
-      el.querySelector(".seat-stack").textContent = `${h.stacks[i]}`;
+      el.querySelector(".seat-stack").textContent = money(h.stacks[i]);
       const showCards = seat === 0 || (reveal && !folded);          // every hand that reaches showdown is revealed
       el.querySelector(".seat-cards").innerHTML = folded && seat !== 0 ? "" : h.hole[i].map((c) => cardHTML(c, !showCards)).join("");
-      el.querySelector(".seat-bet").textContent = h.bets[i] ? h.bets[i] : "";
+      el.querySelector(".seat-bet").innerHTML = h.bets[i] ? `${chipsHTML(h.bets[i])}<b>${money(h.bets[i])}</b>` : "";
       el.querySelector(".seat-dealer").hidden = seat !== state.button;
       if (h.stacks[i] === 0 && !folded && !h.done) el.querySelector(".seat-say").textContent = "All in";
     });
     $("#board").innerHTML = h.board.map((c) => cardHTML(c)).join("") + "<span class='pcard slot'></span>".repeat(5 - h.board.length);
-    $("#pot").textContent = `Pot ${h.committed.reduce((a, b) => a + b, 0)}`;
+    const pot = h.committed.reduce((a, b) => a + b, 0) - h.bets.reduce((a, b) => a + b, 0);   // chips already in the middle
+    const total = h.committed.reduce((a, b) => a + b, 0);
+    $("#pot").innerHTML = `${chipsHTML(h.done ? total : pot, 8)}<span>Pot ${money(total)}</span>`;
   }
 
   function say(seat, text) {
@@ -141,6 +171,7 @@
     for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
     const hole = state.seatOf.map((_, i) => [deck[2 * i], deck[2 * i + 1]]);
     state.hand = new E.Hand({ stacks: state.seatOf.map((s) => state.players[s].stack), smallBlind: SB, bigBlind: BB, hole, board: deck.slice(2 * n, 2 * n + 5) });
+    state.tracker = new R.RangeTracker(state.seatOf.map((seat) => state.models[seat]));
     state.players.forEach((_, s) => { $("#seat-" + s + " .seat-say").textContent = ""; });
     $("#thinking").innerHTML = "";
     $("#next-btn").hidden = true;
@@ -151,6 +182,7 @@
 
   function observation(i) {
     const h = state.hand, n = h.n, seat = state.seatOf[i];
+    state.tracker.setBoard(h.board);
     const canRaise = h.canRaise(i), toCall = h.toCall(i);
     const legal = [];
     if (h.canFold(i)) legal.push(B.FOLD);
@@ -163,6 +195,13 @@
       currentBet: h.bets[i], legal, activeOpponents: order.filter((j) => !h.folded[j]).length,
       playersLeftToAct: h.queue.slice(1).length, numPlayers: n, bigBlind: BB,
       opponentBets: order.map((j) => state.history[state.seatOf[j]].slice()),
+      raisesThisStreet: h.log.filter((e) => e.street === h.street && e.kind === "raise").length,
+      // opponent modeling: who they are, how they play, and what they are estimated to hold
+      opponentTypes: order.map((j) => state.models[state.seatOf[j]].type),
+      opponentStats: order.map((j) => state.models[state.seatOf[j]].stats()),
+      opponentActive: order.map((j) => !h.folded[j]),
+      opponentRanges: order.map((j) => state.tracker.w[j]),
+      opponentRangeStrength: order.map((j) => state.tracker.rangeStrength(j)),
     };
   }
 
@@ -170,21 +209,29 @@
 
   function apply(i, action, raiseTo) {
     const h = state.hand, seat = state.seatOf[i], name = state.players[seat].name, before = h.bets[i];
-    const streetNames = ["preflop", "flop", "turn", "river"], st = h.street;
+    const streetNames = ["preflop", "flop", "turn", "river"], st = h.street, facedBet = h.toCall(i);
+    state.tracker.setBoard(h.board);
+    const lenBefore = h.log.length;
     if (action === B.FOLD && h.canFold(i)) { h.fold(); say(seat, "Fold"); log(`${name} folds`); }
     else if (action === B.BET && h.canRaise(i)) {
       const amt = Math.round(Math.min(Math.max(raiseTo || h.minRaiseTo(i), h.minRaiseTo(i)), h.maxRaiseTo(i)));
       const verb = h.maxBet() === 0 ? "bets" : "raises to";
       h.raiseTo(amt);
       pushHistory(seat, (amt - before) / BB);
-      say(seat, (h.stacks[i] === 0 ? "All in " : "") + (verb === "bets" ? "Bet " : "Raise ") + amt);
-      log(`${name} ${verb} ${amt}${h.stacks[i] === 0 ? " (all in)" : ""}`);
+      say(seat, (h.stacks[i] === 0 ? "All in " : "") + (verb === "bets" ? "Bet " : "Raise ") + money(amt));
+      log(`${name} ${verb} ${money(amt)}${h.stacks[i] === 0 ? " (all in)" : ""}`);
     } else {
       const paid = h.toCall(i);
       h.checkOrCall();
       if (paid) pushHistory(seat, paid / BB);
-      say(seat, paid ? `Call ${paid}` : "Check");
-      log(`${name} ${paid ? "calls " + paid : "checks"}`);
+      say(seat, paid ? `Call ${money(paid)}` : "Check");
+      log(`${name} ${paid ? "calls " + money(paid) : "checks"}`);
+    }
+    // every action updates what the table believes about this player's hand and tendencies
+    const act = h.log[lenBefore];
+    if (act) {
+      const [facing, code] = R.actionCode(facedBet, act.kind === "check" ? "check" : act.kind);
+      state.tracker.update(i, st, facing, code);
     }
     if (!h.done && h.street !== st) { log(`<em>${streetNames[h.street]}: ${h.board.map(C.cardStr).join(" ")}</em>`); clearSays(); }
   }
@@ -220,8 +267,8 @@
       p.net += h.payoffs[i];
       if (h.payoffs[i] > 0) {
         const how = shown && h.scores[i] !== undefined ? ` with ${C.CATEGORY_NAMES[C.categoryOf(h.scores[i])].toLowerCase()}` : "";
-        say(seat, `Wins ${h.winnings[i]}`);
-        log(`<strong>${p.name} wins ${h.winnings[i]}${how}</strong>`);
+        say(seat, `Wins ${money(h.winnings[i])}`);
+        log(`<strong>${p.name} wins ${money(h.winnings[i])}${how}</strong>`);
         $("#seat-" + seat).classList.add("winner");
       }
     });
@@ -233,7 +280,7 @@
 
   function renderScores() {
     $("#scores").innerHTML = state.players.map((p) =>
-      `<li><span>${p.name}${p.type !== "human" ? ` <small>${BOT_TYPES[p.type]}</small>` : ""}</span><b class="${p.net >= 0 ? "up" : "down"}">${p.net >= 0 ? "+" : ""}${(p.net / BB).toFixed(1)} bb</b></li>`).join("")
+      `<li><span>${p.name}${p.type !== "human" ? ` <small>${BOT_TYPES[p.type]}</small>` : ""}</span><b class="${p.net >= 0 ? "up" : "down"}">${p.net >= 0 ? "+" : "−"}${money(Math.abs(p.net))} <small>(${p.net >= 0 ? "+" : ""}${(p.net / BB).toFixed(1)} bb)</small></b></li>`).join("")
       + `<li class="muted">${state.handNo} hand${state.handNo === 1 ? "" : "s"} played</li>`;
   }
 
@@ -243,13 +290,12 @@
     box.hidden = false;
     const toCall = h.toCall(i), canRaise = h.canRaise(i);
     $("#fold-btn").hidden = !h.canFold(i);
-    $("#call-btn").textContent = toCall ? `Call ${toCall}` : "Check";
+    $("#call-btn").textContent = toCall ? `Call ${money(toCall)}` : "Check";
     $("#raise-row").hidden = !canRaise;
     if (canRaise) {
       const lo = h.minRaiseTo(i), hi = h.maxRaiseTo(i), slider = $("#raise-slider"), num = $("#raise-amt");
       slider.min = num.min = lo; slider.max = num.max = hi;
-      slider.value = num.value = lo;
-      $("#raise-btn").textContent = `${h.maxBet() === 0 ? "Bet" : "Raise to"} ${lo}`;
+      setRaise(lo);
       const pot = h.committed.reduce((a, b) => a + b, 0);
       box.dataset.pot = pot; box.dataset.cur = h.bets[i]; box.dataset.call = toCall;
     }
@@ -260,7 +306,8 @@
     const s = $("#raise-slider"), lo = +s.min, hi = +s.max;
     v = Math.round(Math.min(Math.max(v, lo), hi));
     s.value = v; $("#raise-amt").value = v;
-    $("#raise-btn").textContent = `${state.hand.maxBet() === 0 ? "Bet" : "Raise to"} ${v}${v === hi ? " (all in)" : ""}`;
+    $("#raise-btn").textContent = `${state.hand.maxBet() === 0 ? "Bet" : "Raise to"} ${money(v)}${v === hi ? " (all in)" : ""}`;
+    $("#raise-chips").innerHTML = chipsHTML(v);
   }
   function humanAct(action) {
     const h = state.hand;
@@ -270,10 +317,33 @@
   }
 
   // ------------------------------------------------------------------ AI thinking panel
+  const TYPE_NAMES = { random: "Random", q: "Q-learning", rebel: "ReBeL", unknown: "unknown player" };
+  function readsHTML(obs) {
+    const h = state.hand, me = h.actor, n = h.n;
+    const rows = [];
+    for (let k = 1; k < n; k++) {
+      const j = (me + k) % n;
+      if (h.folded[j]) continue;
+      const seat = state.seatOf[j], p = state.players[seat], m = state.models[seat];
+      const label = p.type === "human" ? "You (unknown)" : `${p.name}`;
+      if (m.type === "random") { rows.push(`<li><b>${label}</b>: random bets carry no information, so any two cards</li>`); continue; }
+      const read = state.tracker.topClasses(j, obs.hole, 5);
+      const st = state.tracker.rangeStrength(j), base = h.board.length ? 0.5 : 0.5;
+      const label2 = st > base + 0.1 ? "strong" : st < base - 0.08 ? "weak" : "medium-strength";
+      const [fold, aggr, ev] = m.stats();
+      const guess = read.focus < 1.3 ? "no clear read yet, could be almost anything" : `${label2} range, likely ${read.hands.join(", ")}`;
+      rows.push(`<li><b>${label}</b>: ${guess} <span class="muted">(folds to bets ${Math.round(fold * 100)}%, aggressive ${Math.round(aggr * 100)}%, ${Math.round(ev * 60)} actions seen)</span></li>`);
+    }
+    return rows.length ? `<p class="reads-title">Its read on the table</p><ul class="reads">${rows.join("")}</ul>` : "";
+  }
   function showThinking(p, info, obs) {
     if (!info) { $("#thinking").innerHTML = `<p><strong>${p.name}</strong> chose at random.</p>`; return; }
     const names = ["Fold", "Check", "Call", "Bet/raise"];
-    let html = `<p><strong>${p.name}</strong> · estimated equity <b>${Math.round(info.equity * 100)}%</b> against ${obs.activeOpponents} opponent${obs.activeOpponents === 1 ? "" : "s"}</p>`;
+    const blocked = Array.isArray(info.blocked) ? info.blocked.length : info.blocked;
+    const note = blocked ? `<p class="muted">Conservative betting ruled out ${Array.isArray(info.blocked) ? info.blocked.join(", ") : blocked + " raise size" + (blocked === 1 ? "" : "s")}.</p>` : "";
+    let html = `<p><strong>${p.name}</strong> · equity <b>${Math.round(info.equity * 100)}%</b> against random hands`
+      + (info.rangeEquity != null ? `, <b>${Math.round(info.rangeEquity * 100)}%</b> against what it thinks you all hold` : "") + `</p>`;
+    if (info.rangeEquity != null) html += readsHTML(obs);
     if (info.candidates) {
       const rows = info.candidates.slice().sort((a, b) => b.prob - a.prob).map((c) =>
         `<tr><td>${names[c.action]}${c.action === 3 ? ` ${c.size}× pot` : ""}</td><td>${c.valueBB >= 0 ? "+" : ""}${c.valueBB.toFixed(1)} bb</td><td><span class="bar" style="width:${Math.round(c.prob * 100)}%"></span>${Math.round(c.prob * 100)}%</td></tr>`).join("");
@@ -282,7 +352,7 @@
       const rows = Object.entries(info.values).map(([k, v]) => `<tr><td>${k}${k === info.choice ? " ✓" : ""}</td><td>${v >= 0 ? "+" : ""}${v.toFixed(2)} bb</td></tr>`).join("");
       html += `<table class="think"><tr><th>Option</th><th>Learned value</th></tr>${rows}</table>`;
     }
-    $("#thinking").innerHTML = html;
+    $("#thinking").innerHTML = html + note;
   }
 
   // ------------------------------------------------------------------ wiring
@@ -303,6 +373,10 @@
     $("#next-btn").addEventListener("click", nextHand);
     $("#thinking-toggle").addEventListener("change", (e) => { state.thinking = e.target.checked; $("#thinking-card").hidden = !e.target.checked; });
     $("#speed").addEventListener("change", (e) => { state.speed = +e.target.value; });
+    document.querySelectorAll(".bot-style").forEach((sel) => sel.addEventListener("change", (e) => setStyle(e.target.value)));
+    let saved = "trained";
+    try { saved = localStorage.getItem("poker-style") || "trained"; } catch (e) { /* storage unavailable */ }
+    setStyle(saved);
     $("#new-table").addEventListener("click", () => { $("#game").hidden = true; $("#setup").hidden = false; $("#start-btn").disabled = false; $("#start-btn").textContent = "Deal me in"; });
     document.addEventListener("keydown", (e) => {
       if ($("#controls").hidden || /input|select|textarea/i.test(document.activeElement.tagName) && document.activeElement.type !== "range") return;

@@ -8,8 +8,12 @@
    bigBlind, opponentBets (per opponent, seat order after this player: bet history in bb). */
 (function (root) {
   const C = typeof module !== "undefined" ? require("./cards.js") : root.PokerCards;
+  const R = typeof module !== "undefined" ? require("./ranges.js") : root.PokerRanges;
   const FOLD = 0, CHECK = 1, CALL = 2, BET = 3;
-  const MAX_OPP = 5, HAND_DIM = 21, OPP_DIM = 8 * MAX_OPP, PUBLIC_DIM = 13, STATE_DIM = HAND_DIM + OPP_DIM + PUBLIC_DIM;
+  const MAX_OPP = 5, HAND_DIM = 21, OPP_DIM = 8 * MAX_OPP, PUBLIC_DIM = 13;
+  const LEGACY_DIM = HAND_DIM + OPP_DIM + PUBLIC_DIM;               // 74: first-generation models
+  const MODEL_PER_OPP = 9, MODEL_DIM = 1 + MODEL_PER_OPP * MAX_OPP;  // opponent modeling (second generation)
+  const STATE_DIM = LEGACY_DIM + MODEL_DIM;                          // 120
 
   // ------------------------------------------------------------------ features
   function count(arr, v) { let k = 0; for (const x of arr) if (x === v) k++; return k; }
@@ -118,11 +122,28 @@
     return f;
   }
 
-  function featurize(o, eq) {
+  // who each opponent is (type one-hot), how they play (fold-to-bet, aggression, evidence), whether they
+  // are still in, how strong their estimated range is, and our equity against those ranges
+  function modelFeatures(o, rangeEq) {
+    const f = new Float64Array(MODEL_DIM);
+    f[0] = rangeEq;
+    const types = o.opponentTypes || [];
+    for (let k = 0; k < Math.min(types.length, MAX_OPP); k++) {
+      const b = 1 + MODEL_PER_OPP * k, t = R.TYPES.includes(types[k]) ? types[k] : "unknown";
+      f[b + R.TYPES.indexOf(t)] = 1;
+      o.opponentStats[k].forEach((v, j) => { f[b + 4 + j] = v; });
+      f[b + 7] = o.opponentActive[k] ? 1 : 0;
+      f[b + 8] = o.opponentActive[k] ? o.opponentRangeStrength[k] : 0;
+    }
+    return f;
+  }
+
+  function featurize(o, eq, rangeEq = eq) {
     const x = new Float64Array(STATE_DIM);
     x.set(handFeatures(o.hole, o.board), 0);
     x.set(opponentFeatures(o.opponentBets), HAND_DIM);
     x.set(publicFeatures(o, eq), HAND_DIM + OPP_DIM);
+    if (o.opponentTypes) x.set(modelFeatures(o, rangeEq), LEGACY_DIM);
     return x;
   }
 
@@ -131,15 +152,52 @@
     return Math.round(Math.min(Math.max(target, o.minRaiseTo), o.maxRaiseTo));
   }
 
+  // ------------------------------------------------------------------ conservative betting
+  /* Optional table setting applied on top of every bot's own decision ("share" = equity divided by a
+     fair share of the pot, so 1.0 is an average hand for this many opponents). A raise is allowed only if:
+     - it is not an all-in, unless the hand is very strong (share >= 2.2) or the bot is pot-committed
+       (stack no bigger than the pot after calling);
+     - it is at most 3/4 of the pot, unless the hand is strong (share >= 1.7);
+     - a re-raise needs a better-than-average hand (share >= 1.3), and a third raise on the same street a
+       very strong one (share >= 2.0).
+     A call of more than 2 big blinds is replaced by a fold when equity is clearly below the pot odds.
+     eq = null (the Random bot) counts as an average hand for raises and is never forced to fold. */
+  function raiseAllowed(o, eq, raiseTo) {
+    const share = eq === null ? 1 : eq * (o.activeOpponents + 1);
+    const potAfterCall = o.pot + o.toCall;
+    const allIn = raiseTo >= o.maxRaiseTo;
+    const raiseBy = raiseTo - o.currentBet - o.toCall;
+    const raises = o.raisesThisStreet || 0;
+    if (allIn && !(share >= 2.2 || o.stack <= potAfterCall)) return false;
+    if (!allIn && raiseBy > 0.75 * potAfterCall + o.bigBlind && share < 1.7) return false;
+    if (raises >= 1 && share < 1.3) return false;
+    if (raises >= 2 && share < 2.0) return false;
+    return true;
+  }
+  function callAllowed(o, eq) {
+    if (eq === null || !o.toCall || o.toCall <= 2 * o.bigBlind || !o.legal.includes(FOLD)) return true;
+    return eq >= 0.85 * (o.toCall / (o.pot + o.toCall));
+  }
+  const passive = (o) => (o.toCall ? CALL : CHECK);
+
   // ------------------------------------------------------------------ Random
   class RandomBot {
-    constructor(rand = Math.random) { this.name = "Random"; this.rand = rand; }
+    constructor(rand = Math.random) { this.name = "Random"; this.rand = rand; this.style = "trained"; }
     act(o) {
       const a = o.legal[Math.floor(this.rand() * o.legal.length)];
       if (a !== BET) return { action: a };
-      if (this.rand() < 0.05) return { action: BET, raiseTo: o.maxRaiseTo };
-      const hi = Math.min(o.maxRaiseTo, raiseToFor(o, 1.0));
-      return { action: BET, raiseTo: o.minRaiseTo + Math.floor(this.rand() * (Math.max(o.minRaiseTo, hi) - o.minRaiseTo + 1)) };
+      let raiseTo;
+      if (this.rand() < 0.05) raiseTo = o.maxRaiseTo;
+      else {
+        const hi = Math.min(o.maxRaiseTo, raiseToFor(o, 1.0));
+        raiseTo = o.minRaiseTo + Math.floor(this.rand() * (Math.max(o.minRaiseTo, hi) - o.minRaiseTo + 1));
+      }
+      if (this.style === "conservative" && !raiseAllowed(o, null, raiseTo)) {
+        const capped = Math.min(raiseTo, raiseToFor(o, 0.75), o.maxRaiseTo - 1);
+        if (capped >= o.minRaiseTo && raiseAllowed(o, null, capped)) return { action: BET, raiseTo: capped };
+        return { action: passive(o), info: null };
+      }
+      return { action: BET, raiseTo };
     }
   }
 
@@ -155,7 +213,7 @@
     return (((o.street * 7 + eb) * 4 + fb) * 2 + pos) * 3 + opp;
   }
   class QBot {
-    constructor(table, { samples = 64, rand = Math.random } = {}) { this.name = "Q-learning"; this.q = table.q; this.samples = samples; this.rand = rand; }
+    constructor(table, { samples = 64, rand = Math.random } = {}) { this.name = "Q-learning"; this.q = table.q; this.samples = samples; this.rand = rand; this.style = "trained"; }
     act(o) {
       const eq = C.equity(o.hole, o.board, o.activeOpponents, this.samples, this.rand);
       const s = qState(o, eq);
@@ -163,14 +221,19 @@
       if (o.legal.includes(FOLD)) legal.push(0);
       if (o.legal.includes(BET)) legal.push(2, 3, 4);
       const vals = legal.map((a) => this.q[s][a]);
-      const best = Math.max(...vals);
-      const ties = legal.filter((a, k) => vals[k] === best);
+      const raiseFor = (a) => (a === 4 ? o.maxRaiseTo : raiseToFor(o, a === 2 ? 0.5 : 1.0));
+      // conservative: take the best-valued action that the betting rules allow
+      const cons = this.style === "conservative";
+      const allowed = legal.filter((a) => !cons || a === 0 || (a === 1 ? callAllowed(o, eq) : raiseAllowed(o, eq, raiseFor(a))));
+      const avals = allowed.map((a) => vals[legal.indexOf(a)]);
+      const best = Math.max(...avals);
+      const ties = allowed.filter((a, k) => avals[k] === best);
       const a = ties[Math.floor(this.rand() * ties.length)];
-      const info = { equity: eq, values: Object.fromEntries(legal.map((x, k) => [Q_ACTIONS[x], vals[k]])), choice: Q_ACTIONS[a] };
+      const blocked = legal.filter((x) => !allowed.includes(x)).map((x) => Q_ACTIONS[x]);
+      const info = { equity: eq, values: Object.fromEntries(legal.map((x, k) => [Q_ACTIONS[x], vals[k]])), choice: Q_ACTIONS[a], blocked };
       if (a === 0) return { action: FOLD, info };
       if (a === 1) return { action: o.toCall ? CALL : CHECK, info };
-      if (a === 4) return { action: BET, raiseTo: o.maxRaiseTo, info };
-      return { action: BET, raiseTo: raiseToFor(o, a === 2 ? 0.5 : 1.0), info };
+      return { action: BET, raiseTo: raiseFor(a), info };
     }
   }
 
@@ -206,15 +269,23 @@
 
   class RebelBot {
     constructor(model, { samples = 64, temperature = 0.15, rand = Math.random } = {}) {
-      this.name = "ReBeL"; this.m = model; this.samples = samples; this.temperature = temperature; this.rand = rand;
+      this.name = "ReBeL"; this.style = "trained"; this.m = model;
+      this.dim = model.policy[0].w[0].length;           // 74 (first generation) or 120 (opponent modeling)
+      this.samples = samples; this.temperature = temperature; this.rand = rand;
     }
-    policy(x) { return runMLP(this.m.policy, x); }
-    value(x, a, frac) { return runMLP(this.m.value, Array.from(x).concat(actionVec(a, frac)))[0]; }
-    betFrac(x) { return Math.min(Math.max(runMLP(this.m.bet, x)[0], 0.25), 4.0); }
+    policy(x) { return runMLP(this.m.policy, Array.from(x).slice(0, this.dim)); }
+    value(x, a, frac) { return runMLP(this.m.value, Array.from(x).slice(0, this.dim).concat(actionVec(a, frac)))[0]; }
+    betFrac(x) { return Math.min(Math.max(runMLP(this.m.bet, Array.from(x).slice(0, this.dim))[0], 0.25), 4.0); }
 
     act(o) {
       const eq = C.equity(o.hole, o.board, o.activeOpponents, this.samples, this.rand);
-      const x = featurize(o, eq);
+      // equity against what the opponents are estimated to hold, given how they have bet
+      let rangeEq = eq;
+      if (this.dim > LEGACY_DIM && o.opponentRanges) {
+        const live = o.opponentRanges.filter((_, k) => o.opponentActive[k]);
+        rangeEq = R.rangeEquity(o.hole, o.board, live, this.samples, this.rand);
+      }
+      const x = featurize(o, eq, rangeEq);
       const logits = this.policy(x);
       const masked = logits.map((l, a) => (o.legal.includes(a) ? l : -Infinity));
       const mx = Math.max(...masked);
@@ -231,20 +302,28 @@
           for (const s of sizes) cands.push({ a, s, p: pa / sizes.length });
         } else cands.push({ a, s: 0, p: pa });
       }
-      for (const c of cands) c.q = c.a === FOLD ? -o.committed / o.bigBlind / 10 : this.value(x, c.a, c.s);
+      // folding is valued exactly (lose what is in the pot), except for models trained on luck-adjusted
+      // duplicate targets, whose value scale is shifted, so they value folding with the network too
+      const foldExact = !(this.m.meta && this.m.meta.foldExact === false);
+      for (const c of cands) c.q = c.a === FOLD && foldExact ? -o.committed / o.bigBlind / 10 : this.value(x, c.a, c.s);
+      // conservative: drop raise sizes the betting rules do not allow, then re-weight the rest
+      if (this.style === "conservative") {
+        const kept = cands.filter((c) => (c.a === BET ? raiseAllowed(o, eq, raiseToFor(o, c.s)) : c.a === CALL ? callAllowed(o, eq) : true));
+        if (kept.length) { var blocked = cands.length - kept.length; cands.length = 0; cands.push(...kept); }
+      }
       const zs = cands.map((c) => c.q / this.temperature + Math.log(Math.max(c.p, 1e-6)));
       const zmax = Math.max(...zs);
       const w = zs.map((v) => Math.exp(v - zmax)), ws = w.reduce((a, c) => a + c, 0);
       cands.forEach((c, k) => { c.prob = w[k] / ws; });
       let r = this.rand(), pick = cands[cands.length - 1];
       for (const c of cands) { r -= c.prob; if (r <= 0) { pick = c; break; } }
-      const info = { equity: eq, prior, candidates: cands.map((c) => ({ action: c.a, size: c.s, valueBB: c.q * 10, prob: c.prob })) };
+      const info = { equity: eq, rangeEquity: this.dim > LEGACY_DIM ? rangeEq : null, prior, blocked: blocked || 0, candidates: cands.map((c) => ({ action: c.a, size: c.s, valueBB: c.q * 10, prob: c.prob })) };
       if (pick.a === BET) return { action: BET, raiseTo: raiseToFor(o, pick.s), info };
       return { action: pick.a, info };
     }
   }
 
-  const api = { FOLD, CHECK, CALL, BET, STATE_DIM, Q_ACTIONS, featurize, handFeatures, opponentFeatures, publicFeatures, qState, raiseToFor, runMLP,
+  const api = { FOLD, CHECK, CALL, BET, STATE_DIM, LEGACY_DIM, modelFeatures, Q_ACTIONS, raiseAllowed, callAllowed, featurize, handFeatures, opponentFeatures, publicFeatures, qState, raiseToFor, runMLP,
     RandomBot, QBot, RebelBot };
   if (typeof module !== "undefined") module.exports = api; else root.PokerBots = api;
 })(typeof window !== "undefined" ? window : globalThis);

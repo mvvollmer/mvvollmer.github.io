@@ -1,6 +1,8 @@
 {
- "default": "rebel.json",
+ "default": "rebel-v2.json",
+ "2": "rebel-v2.json",
+ "3": "rebel-v2.json",
  "4": "rebel-4p.json",
- "5": "rebel-5p.json",
+ "5": "rebel-v2-5p.json",
  "6": "rebel-6p.json"
 }
