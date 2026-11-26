@@ -541,3 +541,22 @@ img { max-width: 100%; }
   .seat-bet { transform: translate(calc(-50% + var(--bx, 0px) * .5), calc(-50% + var(--by, 0px) * 1.15)); }
   .chip-col .chip, .pot .chip-col .chip { width: 15px; height: 15px; } .chip-col .chip + .chip, .pot .chip-col .chip + .chip { margin-bottom: -11px; }
 }
+
+/* Click-to-bet chips */
+.chip-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; flex-basis: 100%; padding-top: 6px; border-top: 1px dashed var(--border); }
+.chip-btn {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer;
+  background: none; border: 0; padding: 2px 4px; border-radius: 8px; font: 600 .7rem var(--font-nav); color: var(--muted);
+  transition: transform .12s ease, background .12s;
+}
+.chip-btn .chip { width: 34px; height: 34px; }
+.chip-btn:hover { transform: translateY(-3px); color: var(--heading); }
+.chip-btn:active { transform: translateY(0) scale(.94); }
+.chip-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.reset-bet {
+  font: 500 .8rem var(--font-nav); padding: 7px 12px; border-radius: 50px; cursor: pointer;
+  border: 1px solid var(--border); background: var(--light); color: var(--heading);
+}
+.reset-bet:hover { border-color: var(--accent); color: var(--accent-dark); }
+.pile-note { font-size: .8rem; color: var(--muted); }
+@media (max-width: 640px) { .chip-btn .chip { width: 28px; height: 28px; } .chip-picker { gap: 5px; } }

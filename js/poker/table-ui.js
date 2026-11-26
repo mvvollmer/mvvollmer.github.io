@@ -212,20 +212,21 @@
     const streetNames = ["preflop", "flop", "turn", "river"], st = h.street, facedBet = h.toCall(i);
     state.tracker.setBoard(h.board);
     const lenBefore = h.log.length;
-    if (action === B.FOLD && h.canFold(i)) { h.fold(); say(seat, "Fold"); log(`${name} folds`); }
+    const you = state.players[seat].type === "human", v = (third, base) => (you ? base : third);   // "You raise", "ReBeL raises"
+    if (action === B.FOLD && h.canFold(i)) { h.fold(); say(seat, "Fold"); log(`${name} ${v("folds", "fold")}`); }
     else if (action === B.BET && h.canRaise(i)) {
       const amt = Math.round(Math.min(Math.max(raiseTo || h.minRaiseTo(i), h.minRaiseTo(i)), h.maxRaiseTo(i)));
-      const verb = h.maxBet() === 0 ? "bets" : "raises to";
+      const verb = h.maxBet() === 0 ? v("bets", "bet") : v("raises to", "raise to");
       h.raiseTo(amt);
       pushHistory(seat, (amt - before) / BB);
-      say(seat, (h.stacks[i] === 0 ? "All in " : "") + (verb === "bets" ? "Bet " : "Raise ") + money(amt));
+      say(seat, (h.stacks[i] === 0 ? "All in " : "") + (/^bet/.test(verb) ? "Bet " : "Raise ") + money(amt));
       log(`${name} ${verb} ${money(amt)}${h.stacks[i] === 0 ? " (all in)" : ""}`);
     } else {
       const paid = h.toCall(i);
       h.checkOrCall();
       if (paid) pushHistory(seat, paid / BB);
       say(seat, paid ? `Call ${money(paid)}` : "Check");
-      log(`${name} ${paid ? "calls " + money(paid) : "checks"}`);
+      log(`${name} ${paid ? v("calls ", "call ") + money(paid) : v("checks", "check")}`);
     }
     // every action updates what the table believes about this player's hand and tendencies
     const act = h.log[lenBefore];
@@ -268,7 +269,7 @@
       if (h.payoffs[i] > 0) {
         const how = shown && h.scores[i] !== undefined ? ` with ${C.CATEGORY_NAMES[C.categoryOf(h.scores[i])].toLowerCase()}` : "";
         say(seat, `Wins ${money(h.winnings[i])}`);
-        log(`<strong>${p.name} wins ${money(h.winnings[i])}${how}</strong>`);
+        log(`<strong>${p.name} ${p.type === "human" ? "win" : "wins"} ${money(h.winnings[i])}${how}</strong>`);
         $("#seat-" + seat).classList.add("winner");
       }
     });
@@ -295,19 +296,39 @@
     if (canRaise) {
       const lo = h.minRaiseTo(i), hi = h.maxRaiseTo(i), slider = $("#raise-slider"), num = $("#raise-amt");
       slider.min = num.min = lo; slider.max = num.max = hi;
-      setRaise(lo);
+      setRaise(lo, true);                               // default amount, but no chips clicked yet
+      state.pile = 0;                                   // chips clicked so far this turn
+      $("#pile-note").textContent = "Click chips to build your bet";
       const pot = h.committed.reduce((a, b) => a + b, 0);
       box.dataset.pot = pot; box.dataset.cur = h.bets[i]; box.dataset.call = toCall;
     }
     $("#call-btn").focus({ preventScroll: true });
   }
   function hideControls() { $("#controls").hidden = true; }
-  function setRaise(v) {
-    const s = $("#raise-slider"), lo = +s.min, hi = +s.max;
+  // v is the raise-to total; the chip preview shows what you are pushing in on top of your current bet
+  function setRaise(v, fromChips = false) {
+    const s = $("#raise-slider"), lo = +s.min, hi = +s.max, cur = state.hand.bets[state.hand.actor] || 0;
     v = Math.round(Math.min(Math.max(v, lo), hi));
     s.value = v; $("#raise-amt").value = v;
+    if (!fromChips) { state.pile = v - cur; $("#pile-note").textContent = ""; }
     $("#raise-btn").textContent = `${state.hand.maxBet() === 0 ? "Bet" : "Raise to"} ${money(v)}${v === hi ? " (all in)" : ""}`;
-    $("#raise-chips").innerHTML = chipsHTML(v);
+    $("#raise-chips").innerHTML = chipsHTML(v - cur);
+  }
+  // clicking chips adds them to the pile you are pushing in; the pile becomes a raise-to amount
+  function addChip(value) {
+    const h = state.hand, i = h.actor, cur = h.bets[i], lo = h.minRaiseTo(i), hi = h.maxRaiseTo(i);
+    state.pile = Math.min((state.pile > 0 ? state.pile : 0) + value, hi - cur);
+    const target = cur + state.pile;
+    setRaise(target, true);
+    $("#pile-note").textContent = target >= hi ? `${money(state.pile)} in: that is all in`
+      : target < lo ? `${money(state.pile)} in so far; the minimum ${h.maxBet() === 0 ? "bet" : "raise"} is to ${money(lo)}`
+      : `${money(state.pile)} in`;
+  }
+  function resetBet() {
+    const h = state.hand;
+    state.pile = 0;
+    setRaise(h.minRaiseTo(h.actor), true);
+    $("#pile-note").textContent = "Bet reset: click chips to build your bet";
   }
   function humanAct(action) {
     const h = state.hand;
@@ -364,6 +385,8 @@
     $("#call-btn").addEventListener("click", () => humanAct(B.CALL));
     $("#raise-btn").addEventListener("click", () => humanAct(B.BET));
     $("#raise-slider").addEventListener("input", (e) => setRaise(+e.target.value));
+    document.querySelectorAll("[data-chip]").forEach((b) => b.addEventListener("click", () => addChip(+b.dataset.chip)));
+    $("#reset-bet").addEventListener("click", resetBet);
     $("#raise-amt").addEventListener("change", (e) => setRaise(+e.target.value));
     document.querySelectorAll("[data-pot]").forEach((b) => b.addEventListener("click", () => {
       const box = $("#controls"), f = b.dataset.pot;
